@@ -720,7 +720,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                     height: MediaQuery.sizeOf(context).height / 15,
                   ),
                   Text(
-                    "Explore the virtual world",
+                    "",
                     style: GoogleFonts.montaga(
                         fontSize: MediaQuery.sizeOf(context).width * 0.02,
                         color: const Color(0xFFFF40E5)),

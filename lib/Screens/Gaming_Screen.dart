@@ -1,4 +1,6 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
+// ignore_for_file: prefer_typing_uninitialized_variables, unused_field, unused_element
+
+import 'dart:async';
 
 import 'package:corllel/Common_Screens/footer.dart';
 import 'package:flutter/material.dart';
@@ -16,16 +18,37 @@ bool _isHovered = false;
 bool _isHovered1 = false;
 
 bool isHovering1ndVideo = false;
-
 bool isHovering2ndVideo = false;
-
 bool isHoveringBigVideo = false;
 
 class _GamingScreenState extends State<GamingScreen> {
+  final double _scrollSpeed = 20.0;
+  late ScrollController _scrollController1;
+  bool _reverse = false;
   int currentIndex = 0;
   late VideoPlayerController _controller;
   late VideoPlayerController _controller1;
   late VideoPlayerController bigScreenVideoController;
+  late bool _isPlaying1;
+  late bool _isPlaying2;
+  late bool _isPlaying3;
+  late ScrollController _scrollController;
+
+
+  
+
+  void _startScrolling() {
+    Future.delayed(const Duration(milliseconds: 500)).then((_) {
+      _scrollController1.animateTo(
+        _reverse ? _scrollController1.position.maxScrollExtent : 0.0,
+        duration: Duration(milliseconds: (_reverse ? _scrollSpeed * _scrollController1.position.maxScrollExtent : _scrollSpeed).toInt()),
+        curve: Curves.linear,
+      ).then((_) {
+        _reverse = !_reverse;
+        _startScrolling();
+      });
+    });
+  }
 
   @override
   void initState() {
@@ -54,6 +77,85 @@ class _GamingScreenState extends State<GamingScreen> {
             // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
             setState(() {});
           });
+    _isPlaying1 = false;
+    _isPlaying2 = false;
+    _isPlaying3 = false;
+    _scrollController = ScrollController();
+    _scrollController.addListener(_handleScroll);
+
+    super.initState();
+    _scrollController1 = ScrollController();
+    _startScrolling();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _controller1.dispose();
+    bigScreenVideoController.dispose();
+    // Dispose ScrollController
+    _scrollController.dispose();
+    super.dispose();
+
+    _scrollController1.dispose();
+    super.dispose();
+  }
+
+  void _playPauseVideo1() {
+    if (_isPlaying1 = true) {
+      _controller1.pause();
+      bigScreenVideoController.pause();
+    }
+  }
+
+  void _playPauseVideo2() {
+    if (_isPlaying2 = true) {
+      _controller.pause();
+      bigScreenVideoController.pause();
+    }
+  }
+
+  void _playPauseVideo3() {
+    if (_isPlaying2 = true) {
+      _controller.pause();
+      _controller1.pause();
+    }
+  }
+
+  void _handleScroll() {
+    // Check if any video is playing and whether it is visible on the screen
+    if ((_isPlaying1 || _isPlaying2 || _isPlaying3) &&
+        mounted &&
+        _scrollController.hasClients) {
+      // Check if the video widgets are within the viewport
+      final double bottomPosition1 = _scrollController.offset +
+          _scrollController.position.viewportDimension;
+      final double bottomPosition2 = _scrollController.offset +
+          _scrollController.position.viewportDimension;
+      final double bottomPosition3 = _scrollController.offset +
+          _scrollController.position.viewportDimension;
+      final double topPosition1 = _scrollController.offset;
+      final double topPosition2 = _scrollController.offset;
+      final double topPosition3 = _scrollController.offset;
+
+      // Check if the video is outside the viewport
+      if ((topPosition1 > _controller.value.size.height / 2 &&
+              bottomPosition1 > _controller.value.size.height / 2) ||
+          (topPosition2 > _controller1.value.size.height &&
+              bottomPosition2 > _controller1.value.size.height) ||
+          (topPosition3 > bigScreenVideoController.value.size.height &&
+              bottomPosition3 > bigScreenVideoController.value.size.height)) {
+        // If the video is outside the viewport, pause it
+        setState(() {
+          _isPlaying1 = false;
+          _isPlaying2 = false;
+          _isPlaying3 = false;
+          _controller.pause();
+          _controller1.pause();
+          bigScreenVideoController.pause();
+        });
+      }
+    }
   }
 
   @override
@@ -65,14 +167,15 @@ class _GamingScreenState extends State<GamingScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
           children: [
             SizedBox(
-              height: height / 10,
+              height: height / 15,
             ),
             Center(
               child: Text(
-                'Discover the new world of Metaverse',
+                'Discover the new world',
                 style: GoogleFonts.oxygen(
                   color: const Color(0xffFF40E5),
                   fontSize: width * 0.016,
@@ -83,30 +186,21 @@ class _GamingScreenState extends State<GamingScreen> {
               height: height / 40,
             ),
             Center(
-              child: Text(
-                'by blending the physical\n and digital worlds',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.montaga(
-                  color: const Color(0xffF8F8F8),
-                  fontSize: width * 0.040,
+              child: SizedBox(
+                width: width / 2,
+                child: Text(
+                  'Where Every Move Reunites Destiny',
+                  maxLines: 4,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.montaga(
+                    color: const Color(0xffF8F8F8),
+                    fontSize: width * 0.040,
+                  ),
                 ),
               ),
             ),
             SizedBox(
-              height: height / 40,
-            ),
-            Center(
-              child: Text(
-                'Lorem ipsum dolor sit amet consectetur.\nAdipiscing etiam odio etiam vitae dictum',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.oxygen(
-                  color: const Color(0xffF8F8F8),
-                  fontSize: width * 0.016,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: height / 15,
+              height: height / 25,
             ),
             ClipPath(
               clipper: MyClipper(),
@@ -117,6 +211,7 @@ class _GamingScreenState extends State<GamingScreen> {
                   children: [
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
+                      controller: _scrollController1,
                       child: Row(
                         children: [
                           Image.asset(
@@ -141,6 +236,18 @@ class _GamingScreenState extends State<GamingScreen> {
                           SizedBox(width: width / 25),
                           Image.asset('assets/images/Vector5.png',
                               height: height / 2),
+                              SizedBox(width: width / 25),
+                          Image.asset('assets/images/Vector6.png',
+                              height: height / 2),
+                              SizedBox(width: width / 25),
+                          Image.asset('assets/images/Vector7.png',
+                              height: height / 2),
+                              SizedBox(width: width / 25),
+                          Image.asset('assets/images/Vector8.png',
+                              height: height / 2),
+                              SizedBox(width: width / 25),
+                          Image.asset('assets/images/Vector9.png',
+                              height: height / 2),
                           // SizedBox(width: width / 25),
                         ],
                       ),
@@ -161,7 +268,7 @@ class _GamingScreenState extends State<GamingScreen> {
                     image: AssetImage(
                       "assets/images/experience.png",
                     ),
-                    fit: BoxFit.contain,
+                    fit: BoxFit.fill,
                   ),
                   borderRadius: BorderRadius.circular(20),
                   // color: Colors.white,
@@ -181,22 +288,25 @@ class _GamingScreenState extends State<GamingScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Experience the people and\nthings around us',
+                                  'Experience the people and things around us',
                                   textAlign: TextAlign.center,
-                                  style: GoogleFonts.oxygen(
+                                  style: GoogleFonts.montaga(
                                       color: const Color(0xffF8F8F8),
                                       fontSize: width * 0.023,
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.w400),
                                 ),
                                 const SizedBox(
                                   height: 30,
                                 ),
-                                Text(
-                                  'Enter the metaverse and play interactive games, explore endless virtual worlds,\n and make your own avatar. Engage in epic adventures over a variety of virtual\n   environments, unleash your creativity, and connect with gamers worldwide. ',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.oxygen(
-                                    color: const Color(0xffF8F8F8),
-                                    fontSize: width * 0.016,
+                                SizedBox(width: width/1.8,
+                                  child: Text(
+                                    'Enter the battlefield and play interactive games, explore and make your own avatar. Engage in epic adventures over a variety of virtual environments, unleash your creativity, and connect with gamers worldwide.  ',
+                                    maxLines: 8,
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.oxygen(
+                                      color: const Color(0xffF8F8F8),
+                                      fontSize: width * 0.013,
+                                    ),
                                   ),
                                 ),
                               ]),
@@ -211,7 +321,7 @@ class _GamingScreenState extends State<GamingScreen> {
               height: 0,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 10),
+              padding:  EdgeInsets.only(left: width/20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -243,13 +353,38 @@ class _GamingScreenState extends State<GamingScreen> {
                                 color: Colors.black),
                             child: Stack(children: [
                               SizedBox(
-                                width: width / 5,
+                                width: width / 4.5,
                                 child: AspectRatio(
                                   aspectRatio: 16 / 9,
                                   child: ClipRRect(
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(12)),
-                                      child: VideoPlayer(_controller)),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(12)),
+                                    child: _buildVideoPlayer(_controller,
+                                        _isPlaying1, _playPauseVideo1),
+                                  ),
+                                ),
+                              ),
+                              Positioned.fill(
+                                child: Visibility(
+                                  visible: !isHovering1ndVideo &&
+                                      !_controller.value.isPlaying,
+                                  child: FloatingActionButton(
+                                    backgroundColor: Colors.transparent,
+                                    onPressed: () {
+                                      _playPauseVideo1();
+                                      setState(() {
+                                        _controller.value.isPlaying
+                                            ? _controller.pause()
+                                            : _controller.play();
+                                      });
+                                    },
+                                    child: Icon(
+                                      _controller.value.isPlaying
+                                          ? Icons.pause_circle_outline_outlined
+                                          : Icons.play_arrow_rounded,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ),
                               ),
                               Positioned.fill(
@@ -258,6 +393,7 @@ class _GamingScreenState extends State<GamingScreen> {
                                   child: FloatingActionButton(
                                     backgroundColor: Colors.transparent,
                                     onPressed: () {
+                                      _playPauseVideo1();
                                       setState(() {
                                         _controller.value.isPlaying
                                             ? _controller.pause()
@@ -295,7 +431,7 @@ class _GamingScreenState extends State<GamingScreen> {
                     child: SizedBox(),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 90.0, right: width / 10),
+                    padding: EdgeInsets.only(top: 90.0, right: width / 20),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -310,28 +446,21 @@ class _GamingScreenState extends State<GamingScreen> {
                         SizedBox(
                           height: height / 28,
                         ),
-                        Text(
-                          'Establish open areas for gamers to\n congregate, exchange stories, and engage in\n online social interactions within the\n metaverse',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.oxygen(
-                              color: const Color(0xffFFFFFF),
-                              fontSize: width * 0.014,
-                              fontWeight: FontWeight.w500),
+                        SizedBox(width: width/3.5,
+                          child: Text(
+                            'A storm brews on a journey to the lost continents of Kumarikandam, Atlantis, and more, where the ultimate Battle Royale unfolds. Survive amidst the ruins and dangers of these ancient lands, but beware, for destruction looms. Only those who find the Mysterious Item can unlock the castle and claim victory before the continents meet their demise.',maxLines: 20,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.oxygen(
+                                color: const Color(0xffFFFFFF),
+                                fontSize: width * 0.011,
+                                fontWeight: FontWeight.w500),
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ],
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/images/Vector.png',
-                  width: width / 2.5,
-                )
-              ],
             ),
             Padding(
               padding: const EdgeInsets.only(left: 20),
@@ -340,7 +469,7 @@ class _GamingScreenState extends State<GamingScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: width / 10, top: width / 18),
+                    padding: EdgeInsets.only(left: width / 18, top: width / 18),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -355,13 +484,15 @@ class _GamingScreenState extends State<GamingScreen> {
                         SizedBox(
                           height: height / 28,
                         ),
-                        Text(
-                          'A complex and captivating plot that travels\n through several metaverse planes or kingdoms',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.oxygen(
-                              color: const Color(0xffFFFFFF),
-                              fontSize: width * 0.014,
-                              fontWeight: FontWeight.w500),
+                        SizedBox(width: width/3,
+                          child: Text(
+                            "Embark on a journey through time with our map of the world's oldest places. Explore ancient civilizations, archaeological wonders, and historic landmarks that have stood the test of time. immerse yourself in the rich tapestry of human history and uncover the secrets of our ancient past",maxLines: 15,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.oxygen(
+                                color: const Color(0xffFFFFFF),
+                                fontSize: width * 0.011,
+                                fontWeight: FontWeight.w500),
+                          ),
                         ),
                       ],
                     ),
@@ -381,8 +512,8 @@ class _GamingScreenState extends State<GamingScreen> {
                     width: width / 70,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(
-                      right: 10,
+                    padding:  EdgeInsets.only(
+                      right: width / 20,
                     ),
                     child: _controller1.value.isInitialized
                         ? Padding(
@@ -416,24 +547,50 @@ class _GamingScreenState extends State<GamingScreen> {
                                 child: Stack(
                                   children: [
                                     SizedBox(
-                                      width: width / 5,
+                                      width: width / 4.5,
                                       child: AspectRatio(
                                         aspectRatio: 16 / 9,
                                         child: ClipRRect(
                                           borderRadius: const BorderRadius.all(
                                               Radius.circular(12)),
-                                          child: VideoPlayer(_controller1),
+                                          child: _buildVideoPlayer(_controller1,
+                                              _isPlaying2, _playPauseVideo2),
                                         ),
                                       ),
                                     ),
                                     Positioned.fill(
                                       child: Visibility(
-                                        visible:
-                                            isHovering2ndVideo, // Show the button only when hovering
+                                        visible: !isHovering2ndVideo &&
+                                            !_controller1.value
+                                                .isPlaying, // Show the button only when hovering
 
                                         child: FloatingActionButton(
                                           backgroundColor: Colors.transparent,
                                           onPressed: () {
+                                            _playPauseVideo2();
+                                            setState(() {
+                                              _controller1.value.isPlaying
+                                                  ? _controller1.pause()
+                                                  : _controller1.play();
+                                            });
+                                          },
+                                          child: Icon(
+                                            _controller1.value.isPlaying
+                                                ? Icons
+                                                    .pause_circle_outline_outlined
+                                                : Icons.play_arrow_rounded,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned.fill(
+                                      child: Visibility(
+                                        visible: isHovering2ndVideo,
+                                        child: FloatingActionButton(
+                                          backgroundColor: Colors.transparent,
+                                          onPressed: () {
+                                            _playPauseVideo2();
                                             setState(() {
                                               _controller1.value.isPlaying
                                                   ? _controller1.pause()
@@ -495,47 +652,35 @@ class _GamingScreenState extends State<GamingScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  'In virtual worlds that imitate physical settings, users can\n connect. These areas, which could be anything from magical\n landscapes to future metropolis, offer a visually stimulating\n setting for social interactions',
+                                  'Explore the brand-new Metaverse universe',
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.oxygen(
-                                    color: const Color(0xffF8F8F8),
-                                    fontSize: width * 0.016,
+                                    color: const Color(0xffFF40E5),
+                                    fontSize: width * 0.013,
                                   ),
                                 ),
                                 const SizedBox(
                                   height: 18,
                                 ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    // Your Join Now button onPressed function
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                      // foregroundColor: const Color(0xFFFF40E5),
-                                      backgroundColor: Colors.transparent,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(6.0),
-                                        side: const BorderSide(
-                                          color: Color(0xFFFF40E5),
-                                        ),
-                                      )),
-                                  child: Text(
-                                    'Explore',
-                                    style: GoogleFonts.montserrat(
-                                      color: const Color(0xFFFF40E5),
-                                      fontSize: width * 0.011,
-                                    ),
+                                Text(
+                                  'The future of connection will be in 3D & AR VR',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.montaga(
+                                    color: const Color(0xffF8F8F8),
+                                    fontSize: width * 0.019,
                                   ),
                                 ),
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                Text(
-                                  'In virtual worlds that imitate physical settings, users can\n connect. These areas, which could be anything from magical\n landscapes to future metropolis, offer a visually stimulating',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.oxygen(
-                                    color: const Color(0xffF8F8F8),
-                                    fontSize: width * 0.016,
+                                SizedBox(width: width/2.1,
+                                  child: Text(
+                                    'In virtual worlds that imitate physical settings, users can connect. These areas, which could be anything from magical landscapes to future metropolis, offer a visually stimulating setting for social interactions',maxLines: 10,
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.oxygen(
+                                      color: const Color(0xffF8F8F8),
+                                      fontSize: width * 0.016,
+                                    ),
                                   ),
                                 ),
                               ]),
@@ -546,8 +691,8 @@ class _GamingScreenState extends State<GamingScreen> {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 20,
+             SizedBox(
+              height: height/8,
             ),
             bigScreenVideoController.value.isInitialized
                 ? MouseRegion(
@@ -578,16 +723,21 @@ class _GamingScreenState extends State<GamingScreen> {
                               child: ClipRRect(
                                 borderRadius:
                                     const BorderRadius.all(Radius.circular(15)),
-                                child: VideoPlayer(bigScreenVideoController),
+                                child: _buildVideoPlayer(
+                                    bigScreenVideoController,
+                                    _isPlaying3,
+                                    _playPauseVideo3),
                               ),
                             ),
                           ),
                           Positioned.fill(
                             child: Visibility(
-                              visible: isHoveringBigVideo,
+                              visible: !isHoveringBigVideo &&
+                                  !bigScreenVideoController.value.isPlaying,
                               child: FloatingActionButton(
                                 backgroundColor: Colors.transparent,
                                 onPressed: () {
+                                  _playPauseVideo3();
                                   setState(() {
                                     bigScreenVideoController.value.isPlaying
                                         ? bigScreenVideoController.pause()
@@ -607,6 +757,28 @@ class _GamingScreenState extends State<GamingScreen> {
                               ),
                             ),
                           ),
+                          Positioned.fill(
+                            child: Visibility(
+                              visible: isHoveringBigVideo,
+                              child: FloatingActionButton(
+                                backgroundColor: Colors.transparent,
+                                onPressed: () {
+                                  _playPauseVideo3();
+                                  setState(() {
+                                    bigScreenVideoController.value.isPlaying
+                                        ? bigScreenVideoController.pause()
+                                        : bigScreenVideoController.play();
+                                  });
+                                },
+                                child: Icon(
+                                  bigScreenVideoController.value.isPlaying
+                                      ? Icons.pause_circle_outline_outlined
+                                      : Icons.play_arrow_rounded,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -615,197 +787,38 @@ class _GamingScreenState extends State<GamingScreen> {
                 : Container(
                     child: const Text("ERROR"),
                   ),
-            const SizedBox(
-              height: 0,
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                left: width / 30,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  InkWell(
-                    onTap: () {},
-                    onHover: (hovering) {
-                      setState(() => _isHovered = hovering);
-                    },
-                    child: Stack(
-                      children: [
-                        Opacity(
-                          opacity: _isHovered
-                              ? 0.8
-                              : 1.0, // Adjust the opacity as needed
-                          child: SizedBox(
-                            width: width / 4.5,
-                            child: Image.asset(
-                              'assets/images/immerse1.png',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          bottom: -20,
-                          left: 0,
-                          right: 0,
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 0),
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 400),
-                              height: _isHovered ? 100 : 0,
-                              alignment: Alignment.bottomCenter,
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                              ),
-                              child: _isHovered
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(top: 10),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'Lorem ipsum dolor sit amet consectetur. ',
-                                            style: GoogleFonts.montaga(
-                                                color: const Color(0xffFF40E5),
-                                                fontSize: width * 0.010),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Text(
-                                            'Lorem ipsum dolor sit amet consectetur. Sit suscipit pellentesque\n suspendisse amet ornare varius tristique tempor neque.',
-                                            textAlign: TextAlign.center,
-                                            style: GoogleFonts.montaga(
-                                                color: const Color(0xff0E0E0E),
-                                                fontSize: width * 0.0065),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : null,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 240),
-                    child: InkWell(
-                      onTap: () {},
-                      onHover: (hovering) {
-                        setState(() => _isHovered1 = hovering);
-                      },
-                      child: Stack(
-                        children: [
-                          Opacity(
-                            opacity: _isHovered1
-                                ? 0.8
-                                : 1.0, // Adjust the opacity as needed
-                            child: SizedBox(
-                              width: width / 4.5,
-                              child: Image.asset(
-                                'assets/images/immerse2.png',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            bottom: -20,
-                            left: 0,
-                            right: 0,
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 0),
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 400),
-                                height: _isHovered1 ? 100 : 0,
-                                alignment: Alignment.bottomCenter,
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                ),
-                                child: _isHovered1
-                                    ? Padding(
-                                        padding: const EdgeInsets.only(top: 10),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              'Lorem ipsum dolor sit amet consectetur. ',
-                                              style: GoogleFonts.montaga(
-                                                  color:
-                                                      const Color(0xffFF40E5),
-                                                  fontSize: width * 0.010),
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            Text(
-                                              'Lorem ipsum dolor sit amet consectetur. Sit suscipit pellentesque\n suspendisse amet ornare varius tristique tempor neque.',
-                                              textAlign: TextAlign.center,
-                                              style: GoogleFonts.montaga(
-                                                  color:
-                                                      const Color(0xff0E0E0E),
-                                                  fontSize: width * 0.0065),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    : null,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10, top: 100),
-                    child: Column(
-                      children: [
-                        Text(
-                          'Immerse yourself into the\n world’s richest history',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.montaga(
-                              color: const Color(0xffF8F8F8),
-                              fontSize: width * 0.02),
-                        ),
-                        const SizedBox(
-                          height: 25,
-                        ),
-                        Text(
-                          'No matter where you are, take use of VR exhibitions, AR products and filters, 3D\n models, art galleries, and other cultural institutions.  explore the magnificent Barrier\n Reef or acquire a deeper understanding of art and culture',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.oxygen(
-                              color: const Color(0xffF8F8F8),
-                              fontSize: width * 0.011),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            FooterSection()
+            const FooterSection()
           ],
         ),
       ),
     );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
-    _controller1.dispose();
-    bigScreenVideoController.dispose();
+  Widget _buildVideoPlayer(VideoPlayerController controller, bool isPlaying,
+      VoidCallback playPauseCallback) {
+    return Visibility(
+      visible: controller.value.isInitialized,
+      child: AspectRatio(
+        aspectRatio: controller.value.aspectRatio,
+        child: Stack(
+          children: [
+            VideoPlayer(controller),
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: () {
+                  playPauseCallback();
+                  setState(() {
+                    isPlaying ? controller.pause() : controller.play();
+                  });
+                },
+                // Adding a transparent layer to capture the tap for play/pause
+                child: Container(color: Colors.transparent),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

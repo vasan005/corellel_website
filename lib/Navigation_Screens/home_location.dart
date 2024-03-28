@@ -1,5 +1,5 @@
 import 'package:beamer/beamer.dart';
-import 'package:corllel/Round_Animation.dart';
+import 'package:corllel/Navigation_Screens/landing_screen.dart';
 import 'package:corllel/Screens/Home_Screen.dart';
 import 'package:corllel/Screens/Contact_Screen.dart';
 import 'package:corllel/Screens/MetaWorld_Screen.dart';
@@ -13,7 +13,7 @@ class HomeLocation extends BeamLocation<BeamState> {
     return [
       BeamPage(
           key: ValueKey('home-${DateTime.now()}'),
-          child: const RoundAnimation()),
+          child: const LandingScreen()),
     ];
   }
 
@@ -37,35 +37,6 @@ class DashboardLocation extends BeamLocation<BeamState> {
   @override
   List<Pattern> get pathPatterns => ['/home*'];
 }
-
-// class SettingsLocation extends BeamLocation<BeamState> {
-//   SettingsLocation(RouteInformation routeInformation) : super(routeInformation);
-//   @override
-//   List<BeamPage> buildPages(BuildContext context, BeamState state) {
-//     return [
-//       const BeamPage(
-//           key: ValueKey('Settings'),
-//           child: Settings(),
-//           type: BeamPageType.fadeTransition),
-//       if (state.pathPatternSegments.contains('account'))
-//         const BeamPage(
-//           key: ValueKey('Settings-account'),
-//           child: AccountSettings(),
-//           type: BeamPageType.slideRightTransition,
-//         ),
-//       if (state.pathPatternSegments.contains('profile'))
-//         const BeamPage(
-//           key: ValueKey('Settings-profile'),
-//           child: ProfileSettings(),
-//           type: BeamPageType.slideRightTransition,
-//         ),
-//     ];
-//   }
-
-//   @override
-//   List<Pattern> get pathPatterns =>
-//       ['/settings*', '/settings/account', '/settings/profile'];
-// }
 
 class ProfileLocation extends BeamLocation<BeamState> {
   ProfileLocation(RouteInformation routeInformation) : super(routeInformation);

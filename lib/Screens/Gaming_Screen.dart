@@ -3,7 +3,7 @@
 import 'dart:async';
 
 import 'package:corllel/Common_Screens/footer.dart';
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
 
@@ -56,7 +56,7 @@ class _GamingScreenState extends State<GamingScreen> {
     // ignore: deprecated_member_use
     _controller =
         // ignore: deprecated_member_use
-        VideoPlayerController.network('assets/images/shortvideo1.mp4')
+        VideoPlayerController.network('assets/images/DigAmenD full service.mp4')
           ..initialize().then((_) {
             // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
             setState(() {});
@@ -64,7 +64,7 @@ class _GamingScreenState extends State<GamingScreen> {
     super.initState();
     _controller1 =
         // ignore: deprecated_member_use
-        VideoPlayerController.network('assets/images/shortvideo2.mp4')
+        VideoPlayerController.network('assets/images/DigAmenD full service.mp4')
           ..initialize().then((_) {
             // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
             setState(() {});
@@ -72,7 +72,7 @@ class _GamingScreenState extends State<GamingScreen> {
     super.initState();
     bigScreenVideoController =
         // ignore: deprecated_member_use
-        VideoPlayerController.network('assets/images/bigscreen1.mp4')
+        VideoPlayerController.network('assets/images/DigAmenD full service.mp4')
           ..initialize().then((_) {
             // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
             setState(() {});
@@ -206,7 +206,6 @@ class _GamingScreenState extends State<GamingScreen> {
               clipper: MyClipper(),
               // ignore: avoid_unnecessary_containers
               child: Container(
-                // decoration: BoxDecoration(color: Colors.white),
                 child: Stack(
                   children: [
                     SingleChildScrollView(
@@ -248,7 +247,6 @@ class _GamingScreenState extends State<GamingScreen> {
                               SizedBox(width: width / 25),
                           Image.asset('assets/images/Vector9.png',
                               height: height / 2),
-                          // SizedBox(width: width / 25),
                         ],
                       ),
                     ),
@@ -271,7 +269,6 @@ class _GamingScreenState extends State<GamingScreen> {
                     fit: BoxFit.fill,
                   ),
                   borderRadius: BorderRadius.circular(20),
-                  // color: Colors.white,
                 ),
                 height: height / 1.5,
                 width: width / 1.1,
@@ -635,7 +632,6 @@ class _GamingScreenState extends State<GamingScreen> {
                     fit: BoxFit.fill,
                   ),
                   borderRadius: BorderRadius.circular(20),
-                  // color: Colors.white,
                 ),
                 height: height / 1.9,
                 width: width / 1.1,
@@ -711,7 +707,6 @@ class _GamingScreenState extends State<GamingScreen> {
                       height: height / 1,
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.transparent, width: 3),
-                        // borderRadius: BorderRadius.circular(15),
                         color: Colors.black,
                       ),
                       child: Stack(
@@ -750,7 +745,6 @@ class _GamingScreenState extends State<GamingScreen> {
                                     bigScreenVideoController.value.isPlaying
                                         ? Icons.pause_circle_outline_outlined
                                         : Icons.play_circle_outline_outlined,
-                                    // size: width / 25,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -811,7 +805,7 @@ class _GamingScreenState extends State<GamingScreen> {
                     isPlaying ? controller.pause() : controller.play();
                   });
                 },
-                // Adding a transparent layer to capture the tap for play/pause
+                
                 child: Container(color: Colors.transparent),
               ),
             ),
@@ -832,12 +826,12 @@ class MyClipper extends CustomClipper<Path> {
     path.quadraticBezierTo(
         3 * size.width / 4, size.height / 1.18, size.width, size.height);
     path.lineTo(size.width,
-        size.height / 4); // Adjusted to start from the top-right corner
+        size.height / 4); 
 
     path.quadraticBezierTo(
         3 * size.width / 2, size.height / 2, size.width / 1, size.height / 20);
     path.quadraticBezierTo(size.width / 2, size.height / 4, size.height,
-        size.height / 10); // Added curve to the top-left corner
+        size.height / 10); 
 
     path.close();
     return path;

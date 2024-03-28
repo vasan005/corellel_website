@@ -1,9 +1,12 @@
 import 'package:beamer/beamer.dart';
+import 'package:corllel/Common_Screens/footer.dart';
+import 'package:corllel/Round_Animation.dart';
 import 'package:corllel/Screens/Home_Screen.dart';
 import 'package:corllel/Screens/Contact_Screen.dart';
 import 'package:corllel/Screens/MetaWorld_Screen.dart';
 import 'package:corllel/Screens/Gaming_Screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LandingScreen extends StatefulWidget {
   const LandingScreen({Key? key}) : super(key: key);
@@ -14,65 +17,50 @@ class LandingScreen extends StatefulWidget {
 
 class _LandingScreenState extends State<LandingScreen> {
   final _beamerKey = GlobalKey<BeamerState>();
+  bool hasNavigatedToLanding = false;
+
   @override
   Widget build(BuildContext context) {
+    final path = (context.currentBeamLocation.state as BeamState).uri.path;
+    print("Prathap${path}");
+
+    // Check if the current path is "*"
+    final bool isHome = path == "/";
+
     return Scaffold(
       body: Column(
         children: [
-          Container(
+          if (!isHome)
+            Container(
               clipBehavior: Clip.antiAlias,
-              // margin: const EdgeInsets.only(left: 5, right: 5, top: 5),
               decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(0),
-                      topRight: Radius.circular(0))),
-              child: SideNav(beamer: _beamerKey)),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(0),
+                  topRight: Radius.circular(0),
+                ),
+              ),
+              child: SideNav(beamer: _beamerKey),
+            ),
           Expanded(
             child: Container(
               clipBehavior: Clip.antiAlias,
-              // margin: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
               decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(0),
-                      bottomRight: Radius.circular(0))),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(0),
+                  bottomRight: Radius.circular(0),
+                ),
+              ),
               child: Beamer(
                 key: _beamerKey,
                 routerDelegate: BeamerDelegate(
-                  // NOTE First Method
                   locationBuilder: RoutesLocationBuilder(
                     routes: {
-                      '*': (context, state, data) => const BeamPage(
+                      '*': (context, state, data) => const RoundAnimation(),
+                      '/home': (context, state, data) => const BeamPage(
                             key: ValueKey('Home'),
                             type: BeamPageType.scaleTransition,
                             child: HomePageScreen(),
                           ),
-                      // '/settings': (context, state, data) {
-                      //   print(state.pathPatternSegments);
-                      //   if (state.pathPatternSegments.contains('account')) {
-                      //     return BeamPage(
-                      //       key: ValueKey('AccountsSettings - ${DateTime.now()}'),
-                      //       type: BeamPageType.scaleTransition,
-                      //       child: const AccountSettings(),
-                      //     );
-                      //   } else if (state.pathPatternSegments
-                      //       .contains('profile')) {
-                      //     return BeamPage(
-                      //       key: ValueKey('ProfileSettings - ${DateTime.now()}'),
-                      //       type: BeamPageType.scaleTransition,
-                      //       child: const ProfileSettings(),
-                      //     );
-                      //   }
-                      //   return BeamPage(
-                      //     key: ValueKey('Settings - ${DateTime.now()}'),
-                      //     type: BeamPageType.scaleTransition,
-                      //     child: const Settings(),
-                      //   );
-                      // },
-                      // '/home': (context, state, data) => const BeamPage(
-                      //       key: ValueKey('Home'),
-                      //       type: BeamPageType.scaleTransition,
-                      //       child: Dashboard(),
-                      //     ),
                       '/gaming': (context, state, data) => const BeamPage(
                             key: ValueKey('Gaming'),
                             type: BeamPageType.scaleTransition,
@@ -86,30 +74,10 @@ class _LandingScreenState extends State<LandingScreen> {
                       '/contact': (context, state, data) => const BeamPage(
                             key: ValueKey('Contact'),
                             type: BeamPageType.scaleTransition,
-                            child: ContactScreen(),
+                            child: FooterSection(),
                           ),
                     },
                   ),
-
-                  // NOTE Secondary Method
-                  // locationBuilder: (routeInfo, data) {
-                  //   if (routeInfo.location!.contains('dashboard')) {
-                  //     return DashboardLocation(routeInfo);
-                  //   }
-                  //   if (routeInfo.location!.contains('settings')) {
-                  //     return SettingsLocation(routeInfo);
-                  //   }
-                  //   if (routeInfo.location!.contains('profile')) {
-                  //     return ProfileLocation(routeInfo);
-                  //   }
-                  //   if (routeInfo.location!.contains('notifications')) {
-                  //     return NotificationLocation(routeInfo);
-                  //   }
-                  //   if (routeInfo.location!.contains('about')) {
-                  //     return AboutLocation(routeInfo);
-                  //   }
-                  //   return NotFound(path: routeInfo.location!.toString());
-                  // },
                 ),
               ),
             ),
@@ -130,80 +98,59 @@ class SideNav extends StatefulWidget {
 
 class _SideNavState extends State<SideNav> {
   int selected = -1;
+
   @override
   void initState() {
     super.initState();
   }
 
-  List<String> navItems = [
-    'Home',
-    // 'Settings',
-    'Gaming',
-    'MetaWorld',
-    'Contact'
-  ];
-  List<String> navs = [
-    '/home',
-    // '/settings',
-    '/gaming',
-    '/metaworld',
-    '/contact'
-  ];
+  List<String> navItems = ['Home', 'Gaming', 'MetaWorld', 'Contact'];
+  List<String> navs = ['/home', '/gaming', '/metaworld', '/contact'];
 
   @override
   Widget build(BuildContext context) {
     final path = (context.currentBeamLocation.state as BeamState).uri.path;
     print('path $path');
+    print("Selected${selected}");
     if (path.contains('/home')) {
       selected = 0;
-    }
-    //  else if (path.contains('/settings')) {
-    //   selected = 1;
-    // }
-    else if (path.contains('/gaming')) {
+    } else if (path.contains('/gaming')) {
       selected = 1;
     } else if (path.contains('/metaworld')) {
       selected = 2;
     } else if (path.contains('/contact')) {
       selected = 3;
     }
-    return Container(
-      color: const Color.fromARGB(255, 0, 0, 0),
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.sizeOf(context).width / 14),
-        child: Row(
-          children: [
-            const Text(
-              "corllel",
-              style: TextStyle(
-                  color: Colors.white,
-                  decoration: TextDecoration.none,
-                  fontSize: 26),
-            ),
-            const Expanded(child: SizedBox()),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: navItems.map((navItem) {
-                final index = navItems.indexOf(navItem);
-                final isContact = index == 3; // Index of "Contact" navItem
+    return Visibility(
+      visible: selected != -1, // Hide when path is "*"
+      child: Container(
+        color: const Color.fromARGB(255, 0, 0, 0),
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.sizeOf(context).width / 14),
+          child: Row(
+            children: [
+              Text(
+                "Corllel",
+                style: GoogleFonts.montaga(
+                    color: Colors.white,
+                    decoration: TextDecoration.none,
+                    fontSize: MediaQuery.sizeOf(context).width * 0.02),
+              ),
+              const Expanded(child: SizedBox()),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: navItems.map((navItem) {
+                  final index = navItems.indexOf(navItem);
+                  final isContact = index == 3;
 
-                return AnimatedContainer(
+                  return AnimatedContainer(
                     key: ValueKey(navItem),
-                    // decoration: BoxDecoration(
-                    //   borderRadius: BorderRadius.circular(10.0),
-                    //   color: selected == navItems.indexOf(navItem)
-                    //       ? Colors.grey[850]
-                    //       : Colors.white,
-                    // ),
-                    duration: const Duration(
-                      milliseconds: 375,
-                    ),
-                    // width: 120.0,
+                    duration: const Duration(milliseconds: 375),
                     margin: const EdgeInsets.symmetric(vertical: 15.0),
                     decoration: BoxDecoration(
                       color: isContact
-                          ? Colors.white // White background for "Contact"
+                          ? Colors.white
                           : const Color.fromARGB(255, 11, 11, 11),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
@@ -221,14 +168,15 @@ class _SideNavState extends State<SideNav> {
                           });
                         },
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 18, vertical: 9),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: MediaQuery.sizeOf(context).width / 70,
+                              vertical: MediaQuery.sizeOf(context).height / 80),
                           child: Center(
                             child: Text(
                               navItem,
                               style: TextStyle(
-                                // fontSize:
-                                // MediaQuery.sizeOf(context).width * 0.015,
+                                fontSize:
+                                    MediaQuery.sizeOf(context).width * 0.012,
                                 color: isContact
                                     ? Colors.black
                                     : selected == navItems.indexOf(navItem)
@@ -245,10 +193,12 @@ class _SideNavState extends State<SideNav> {
                           ),
                         ),
                       ),
-                    ));
-              }).toList(),
-            ),
-          ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
         ),
       ),
     );

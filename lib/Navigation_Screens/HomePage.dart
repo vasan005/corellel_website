@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, file_names
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,7 +17,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Get the size of the image after the layout is complete
       getImageSize(context);
     });
   }
@@ -37,7 +36,6 @@ class _HomePageState extends State<HomePage> {
         onPanUpdate: (details) {
           setState(() {
             _position += details.delta;
-            // Limiting pointer movement within the bounds of the image
             _position = Offset(
               _position.dx.clamp(0, _imageWidth),
               _position.dy.clamp(0, _imageHeight),

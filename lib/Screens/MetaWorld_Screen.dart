@@ -37,14 +37,14 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
     super.initState();
     _videoController1 =
         // ignore: deprecated_member_use
-        VideoPlayerController.network('assets/images/digamend.mp4')
+        VideoPlayerController.network('assets/images/DigAmenD full service.mp4')
           ..initialize().then((_) {
             setState(() {});
           });
     super.initState();
     _videoController2 =
         // ignore: deprecated_member_use
-        VideoPlayerController.network('assets/images/digamend.mp4')
+        VideoPlayerController.network('assets/images/DigAmenD full service.mp4')
           ..initialize().then((_) {
             setState(() {});
           });
@@ -60,7 +60,6 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
   void dispose() {
     _videoController1.dispose();
     _videoController2.dispose();
-    // Dispose ScrollController
     _scrollController.dispose();
     super.dispose();
   }
@@ -78,11 +77,9 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
   }
 
   void _handleScroll() {
-    // Check if any video is playing and whether it is visible on the screen
     if ((_isPlaying1 || _isPlaying2) &&
         mounted &&
         _scrollController.hasClients) {
-      // Check if the video widgets are within the viewport
       final double bottomPosition1 = _scrollController.offset +
           _scrollController.position.viewportDimension;
       final double bottomPosition2 = _scrollController.offset +
@@ -93,12 +90,10 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
       final double topPosition2 = _scrollController.offset;
       final double topPosition3 = _scrollController.offset;
 
-      // Check if the video is outside the viewport
       if ((topPosition1 > _videoController1.value.size.height / 2 &&
               bottomPosition1 > _videoController1.value.size.height / 2) ||
           (topPosition2 > _videoController2.value.size.height &&
               bottomPosition2 > _videoController2.value.size.height)) {
-        // If the video is outside the viewport, pause it
         setState(() {
           _isPlaying1 = false;
           _isPlaying2 = false;
@@ -117,6 +112,7 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
           children: [
             Padding(
@@ -145,7 +141,6 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
                                 color: Colors.white, fontSize: width * 0.046),
                           ),
                         ),
-                        
                       ],
                     )
                   ],
@@ -162,7 +157,6 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
                 ),
                 SizedBox(
                   width: width / 7,
-                  
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,7 +195,6 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
                       width: width / 2.6,
                       child: Text(
                         "Persistent virtual world where users can experience the real world in virtual space. This is created by the convergence of virtually enhanced physical reality and physically persistent virtual world.",
-                        
                         style: GoogleFonts.oxygen(
                             color: Colors.white,
                             fontSize: width * 0.013,
@@ -223,7 +216,6 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
                         ),
                       ),
                     ),
-                    
                   ],
                 )
               ],
@@ -295,7 +287,6 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
                             style: GoogleFonts.oxygen(
                                 color: Colors.white, fontSize: width * 0.015),
                           ),
-                          // Padding(padding: EdgeInsets.only(top: height / 45)),
                           SizedBox(height: height * 0.012),
                           SizedBox(
                             width: width / 4.8,
@@ -305,8 +296,6 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
                                   color: Colors.white, fontSize: width * 0.010),
                             ),
                           ),
-
-                          
                         ],
                       ),
                     ),
@@ -351,8 +340,6 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
                                   color: Colors.white, fontSize: width * 0.010),
                             ),
                           ),
-
-                          
                         ],
                       ),
                     ),
@@ -413,7 +400,6 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
                 SizedBox(
                   height: height / 1.55,
                   child: Container(
-                    // height: height / 1.5,
                     width: width / 4,
                     decoration: BoxDecoration(
                         color: Color(0xff090823),
@@ -449,8 +435,6 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
                                   color: Colors.white, fontSize: width * 0.010),
                             ),
                           ),
-
-                          
                         ],
                       ),
                     ),
@@ -474,7 +458,6 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          
                           Image.asset(
                             'assets/images/image7.png',
                             width: width / 4.5,
@@ -802,11 +785,9 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
                 )
               ],
             ),
-
             SizedBox(
               height: height / 5,
             ),
-
             FooterSection()
           ],
         ),
@@ -832,7 +813,6 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
                     isPlaying ? controller.pause() : controller.play();
                   });
                 },
-                // Adding a transparent layer to capture the tap for play/pause
                 child: Container(color: Colors.transparent),
               ),
             ),
@@ -842,5 +822,3 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
     );
   }
 }
-
-

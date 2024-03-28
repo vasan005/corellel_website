@@ -1,6 +1,10 @@
 // ignore_for_file: deprecated_member_use, file_names
 
+// import 'package:corllel/Common_Screens/footer.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:corllel/Common_Screens/footer.dart';
+import 'package:corllel/Navigation_Screens/landing_screen.dart';
+import 'package:corllel/const.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scroll_loop_auto_scroll/scroll_loop_auto_scroll.dart';
@@ -13,47 +17,192 @@ class HomePageScreen extends StatefulWidget {
   State<HomePageScreen> createState() => _HomePageScreenState();
 }
 
+bool condition = true;
+
+bool isHovering1ndVideo = false;
+bool isHovering2ndVideo = false;
+bool isHoveringBigVideo = false;
+
 class _HomePageScreenState extends State<HomePageScreen> {
   int currentIndex = 0;
 
   late VideoPlayerController _controller;
   late VideoPlayerController _controller2;
-
   late VideoPlayerController _controller3;
-
   late VideoPlayerController _controller4;
   late VideoPlayerController _controller5;
+  late bool _isPlaying1;
+  late bool _isPlaying2;
+  late bool _isPlaying3;
+  late bool _isPlaying4;
+  late bool _isPlaying5;
+  late ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.network('assets/images/shortvideo2.mp4')
+
+    prathap(context);
+
+    _controller = VideoPlayerController.network('assets/images/DigAmenD full service.mp4')
       ..initialize().then((_) {
         setState(() {});
       });
 
     _controller2 =
-        VideoPlayerController.network('assets/images/shortvideo1.mp4')
+        VideoPlayerController.network('assets/images/DigAmenD full service.mp4')
           ..initialize().then((_) {
             setState(() {});
           });
 
-    _controller3 = VideoPlayerController.network('assets/images/bigscreen1.mp4')
+    _controller3 = VideoPlayerController.network('assets/images/DigAmenD full service.mp4')
       ..initialize().then((_) {
         setState(() {});
       });
 
     _controller4 =
-        VideoPlayerController.network('assets/images/shortvideo2.mp4')
+        VideoPlayerController.network('assets/images/DigAmenD full service.mp4')
           ..initialize().then((_) {
             setState(() {});
           });
 
     _controller5 =
-        VideoPlayerController.network('assets/images/shortvideo1.mp4')
+        VideoPlayerController.network('assets/images/DigAmenD full service.mp4')
           ..initialize().then((_) {
             setState(() {});
           });
+    _isPlaying1 = false;
+    _isPlaying2 = false;
+    _isPlaying3 = false;
+    _isPlaying4 = false;
+    _isPlaying5 = false;
+    _scrollController = ScrollController();
+    _scrollController.addListener(_handleScroll);
+  }
+
+  void prathap(BuildContext context) {
+    if (!hasNavigated) {
+      Future.delayed(const Duration(seconds: 0), () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const LandingScreen()),
+        );
+      });
+      print("Navigated to LandingScreen");
+      setState(() {
+        hasNavigated = true;
+      });
+      print("hasNavigated set to ${hasNavigated}");
+    }
+  }
+
+  void refreshPage(BuildContext context) {
+    Future.delayed(const Duration(seconds: 1), () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePageScreen()),
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _controller2.dispose();
+    _controller3.dispose();
+    _controller4.dispose();
+    _controller5.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _playPauseVideo1() {
+    if (_isPlaying1 = true) {
+      _controller2.pause();
+      _controller3.pause();
+      _controller4.pause();
+      _controller5.pause();
+    }
+  }
+
+  void _playPauseVideo2() {
+    if (_isPlaying2 = true) {
+      _controller.pause();
+      _controller3.pause();
+      _controller4.pause();
+      _controller5.pause();
+    }
+  }
+
+  void _playPauseVideo3() {
+    if (_isPlaying3 = true) {
+      _controller.pause();
+      _controller2.pause();
+      _controller4.pause();
+      _controller5.pause();
+    }
+  }
+
+  void _playPauseVideo4() {
+    if (_isPlaying4 = true) {
+      _controller.pause();
+      _controller2.pause();
+      _controller3.pause();
+      _controller5.pause();
+    }
+  }
+
+  void _playPauseVideo5() {
+    if (_isPlaying5 = true) {
+      _controller.pause();
+      _controller2.pause();
+      _controller3.pause();
+      _controller4.pause();
+    }
+  }
+
+  void _handleScroll() {
+    if ((_isPlaying1 ||
+            _isPlaying2 ||
+            _isPlaying3 ||
+            _isPlaying4 ||
+            _isPlaying5) &&
+        mounted &&
+        _scrollController.hasClients) {
+      final double bottomPosition1 = _scrollController.offset +
+          _scrollController.position.viewportDimension;
+      final double bottomPosition2 = _scrollController.offset +
+          _scrollController.position.viewportDimension;
+      final double bottomPosition3 = _scrollController.offset +
+          _scrollController.position.viewportDimension;
+      final double topPosition1 = _scrollController.offset;
+      final double topPosition2 = _scrollController.offset;
+      final double topPosition3 = _scrollController.offset;
+
+      if ((topPosition1 > _controller.value.size.height / 2 &&
+              bottomPosition1 > _controller.value.size.height / 2) ||
+          (topPosition2 > _controller2.value.size.height &&
+              bottomPosition2 > _controller2.value.size.height) ||
+          (topPosition3 > _controller3.value.size.height &&
+              bottomPosition3 > _controller3.value.size.height) ||
+          (topPosition3 > _controller4.value.size.height &&
+              bottomPosition3 > _controller4.value.size.height) ||
+          (topPosition3 > _controller5.value.size.height &&
+              bottomPosition3 > _controller5.value.size.height)) {
+        setState(() {
+          _isPlaying1 = false;
+          _isPlaying2 = false;
+          _isPlaying3 = false;
+          _isPlaying4 = false;
+          _isPlaying5 = false;
+          _controller.pause();
+          _controller2.pause();
+          _controller3.pause();
+          _controller4.pause();
+          _controller5.pause();
+        });
+      }
+    }
   }
 
   bool isHovering1ndVideo = false;
@@ -64,75 +213,57 @@ class _HomePageScreenState extends State<HomePageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final height = size.height;
     return Container(
       color: Colors.black,
       child: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(children: [
-          SizedBox(
-            height: MediaQuery.sizeOf(context).height / 8,
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width: MediaQuery.sizeOf(context).width / 2,
+                width: width / 2,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text("Discover the new world of Metaverse",
+                    Text("Discover the new world",
                         style: GoogleFonts.oxygen(
-                            fontSize: MediaQuery.sizeOf(context).width * 0.02,
+                            fontSize: width * 0.018,
                             color: const Color(0xFFFF40E5))),
                     SizedBox(
-                      height: MediaQuery.sizeOf(context).height / 24,
+                      height: height * 0.02,
                     ),
                     Text(
-                      "Explore, Create and\nConnect through the",
+                      " Dream it, See it and\nExperience it through",
                       style: GoogleFonts.montaga(
-                          fontSize: MediaQuery.sizeOf(context).width * 0.05,
-                          color: Colors.white),
+                          fontSize: width * 0.043, color: Colors.white),
                     ),
-                    Text(
-                      "Corllel",
-                      style: GoogleFonts.montaga(
-                          fontSize: MediaQuery.sizeOf(context).width * 0.05,
-                          color: Colors.white),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.sizeOf(context).height / 35,
-                    ),
-                    Text(
-                      "Lorem ipsum dolor sit amet consectetur.\nAdipiscing etiam odio etiam vitae dictum",
-                      style: GoogleFonts.oxygen(
-                          fontSize: MediaQuery.sizeOf(context).width * 0.02,
-                          color: Colors.white),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.sizeOf(context).height / 30,
-                    ),
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                          foregroundColor: const Color(0xFFFF40E5),
-                          backgroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6.0),
-                            side: const BorderSide(color: Color(0xFFFF40E5)),
-                          )),
-                      child: Text(
-                        'Discover Now',
-                        style: GoogleFonts.montserrat(
-                          color: const Color(0xFFFF40E5),
-                          fontSize: MediaQuery.sizeOf(context).width * 0.01,
-                        ),
+                    ColorizeAnimatedTextKit(
+                      totalRepeatCount: Duration.microsecondsPerMillisecond,
+                      text: const [
+                        "Corllel",
+                      ],
+                      textStyle: GoogleFonts.montaga(
+                        fontSize: width * 0.042,
                       ),
+                      colors: const [
+                        Color(0xFFFF40E5),
+                        Colors.white,
+                      ],
+                      textAlign: TextAlign.start,
+                    ),
+                    SizedBox(
+                      height: height / 35,
                     ),
                   ],
                 ),
               ),
               SizedBox(
-                width: MediaQuery.sizeOf(context).width / 2.1,
-                height: MediaQuery.sizeOf(context).height / 1.1,
+                width: width / 2.1,
+                height: height / 1.1,
                 child: Image.asset(
                   'assets/images/k1.png',
                 ),
@@ -140,7 +271,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
             ],
           ),
           SizedBox(
-            height: MediaQuery.sizeOf(context).height / 8,
+            height: height * 0.01,
           ),
           Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -152,19 +283,17 @@ class _HomePageScreenState extends State<HomePageScreen> {
                     Text(
                       'Corllel',
                       style: GoogleFonts.montaga(
-                          fontSize: MediaQuery.sizeOf(context).width * 0.02,
-                          color: Colors.white),
+                          fontSize: width * 0.02, color: Colors.white),
                     ),
                     SizedBox(
-                      width: MediaQuery.sizeOf(context).width / 40,
+                      width: width / 40,
                     ),
-                    Image.asset('assets/images/cube.png',
-                        height: MediaQuery.sizeOf(context).height / 12),
+                    Image.asset('assets/images/cube.png', height: height / 12),
                   ]),
                 ),
               ]),
           SizedBox(
-            height: MediaQuery.sizeOf(context).height / 8,
+            height: height / 8,
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -172,95 +301,87 @@ class _HomePageScreenState extends State<HomePageScreen> {
               Text(
                 "About us",
                 style: GoogleFonts.oxygen(
-                  fontSize: MediaQuery.sizeOf(context).width * 0.04,
+                  fontSize: width * 0.04,
                   color: const Color(0xFFFF40E5),
                 ),
               ),
-              Text(
-                "Lorem ipsum dolor sit amet consectetur. Sit suscipit pellentesque\nsuspendisse amet ornare varius ",
-                textAlign: TextAlign.center,
-                style: GoogleFonts.oxygen(
-                    fontSize: MediaQuery.sizeOf(context).width * 0.01,
-                    color: Colors.white),
-              )
             ],
           ),
           SizedBox(
-            height: MediaQuery.sizeOf(context).height / 9,
+            height: height * 0.04,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Container(
-                width: MediaQuery.sizeOf(context).width / 2.8,
-                height: MediaQuery.sizeOf(context).height / 2.1,
-                decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.fill,
-                        image: AssetImage("assets/images/j2.png"))),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 28, vertical: 35),
-                  child: Column(
-                    children: [
-                      Text(
-                        "Our Story",
-                        style: GoogleFonts.oxygen(
-                            fontSize: MediaQuery.sizeOf(context).width * 0.02,
-                            color: Colors.white),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.sizeOf(context).height / 30,
-                      ),
-                      Text(
-                        "Lorem ipsum dolor sit amet consectetur. Sit\nsuscipit pellentesque suspendisse amet ornare\nvarius tristique tempor neque. Curabitur varius\nscelerisque id lobortis eu bibendum nulla. Urna\nid mi tempus faucibus eros lacus vitae\ndignissim dignissim. Ac eros pretium quam\ntellus.",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oxygen(
-                            fontWeight: FontWeight.w100,
-                            fontSize: MediaQuery.sizeOf(context).width * 0.012,
-                            color: Colors.white),
-                      )
-                    ],
+          Padding(
+            padding: EdgeInsets.only(left: width * 0.051, right: width * 0.051),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: width / 2.8,
+                  decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: AssetImage("assets/images/j2.png"))),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: width * 0.03, vertical: width * 0.022),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Our Story",
+                          style: GoogleFonts.oxygen(
+                              fontSize: width * 0.02, color: Colors.white),
+                        ),
+                        SizedBox(
+                          height: height / 30,
+                        ),
+                        Text(
+                          "Welcome to Digamend, where imagination meets innovation in the world of Entertainment, Virtual Reality (VR), and Gaming.At Digamend, we're passionate about creating unforgettable experiences that transport you to new realms and redefine the boundaries of entertainment. ",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.oxygen(
+                              fontWeight: FontWeight.w100,
+                              fontSize: width * 0.014,
+                              color: Colors.white),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                width: MediaQuery.sizeOf(context).width / 2.8,
-                height: MediaQuery.sizeOf(context).height / 2.1,
-                decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.fill,
-                        image: AssetImage("assets/images/j2.png"))),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 28, vertical: 35),
-                  child: Column(
-                    children: [
-                      Text(
-                        "Our Mission",
-                        style: GoogleFonts.oxygen(
-                            fontSize: MediaQuery.sizeOf(context).width * 0.02,
-                            color: Colors.white),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.sizeOf(context).height / 30,
-                      ),
-                      Text(
-                        "Lorem ipsum dolor sit amet consectetur. Sit\nsuscipit pellentesque suspendisse amet ornare\nvarius tristique tempor neque. Curabitur varius\nscelerisque id lobortis eu bibendum nulla. Urna\nid mi tempus faucibus eros lacus vitae\ndignissim dignissim. Ac eros pretium quam\ntellus.",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.oxygen(
-                            fontWeight: FontWeight.w100,
-                            fontSize: MediaQuery.sizeOf(context).width * 0.012,
-                            color: Colors.white),
-                      )
-                    ],
+                Container(
+                  width: width / 2.8,
+                  decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: AssetImage("assets/images/j2.png"))),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: width * 0.02, vertical: width * 0.012),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Our Mission",
+                          style: GoogleFonts.oxygen(
+                              fontSize: width * 0.02, color: Colors.white),
+                        ),
+                        SizedBox(
+                          height: height / 30,
+                        ),
+                        Text(
+                          "Our mission is simple yet ambitious: to revolutionize the way you experience entertainment. We strive to push the boundaries of creativity and technology, bringing you cutting-edge experiences that captivate your senses and leave you craving more. Immersive VR Experiences, Gaming Excellence, Pushing the Boundaries of Innovation.",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.oxygen(
+                              fontWeight: FontWeight.w100,
+                              fontSize: width * 0.014,
+                              color: Colors.white),
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           SizedBox(
-            height: MediaQuery.sizeOf(context).height / 13,
+            height: height / 13,
           ),
           Padding(
             padding: const EdgeInsets.all(48.0),
@@ -270,7 +391,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                 Column(
                   children: [
                     SizedBox(
-                      width: MediaQuery.sizeOf(context).width / 4.3,
+                      width: width / 4.3,
                       child: _controller.value.isInitialized
                           ? MouseRegion(
                               onHover: (event) {
@@ -285,13 +406,41 @@ class _HomePageScreenState extends State<HomePageScreen> {
                               },
                               child: Stack(children: [
                                 SizedBox(
-                                  width: MediaQuery.sizeOf(context).width / 4.3,
+                                  width: width / 4.3,
                                   child: AspectRatio(
                                     aspectRatio: 16 / 9,
                                     child: ClipRRect(
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(15)),
-                                        child: VideoPlayer(_controller)),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(15)),
+                                      child: _buildVideoPlayer(_controller,
+                                          _isPlaying1, _playPauseVideo1),
+                                    ),
+                                  ),
+                                ),
+                                Positioned.fill(
+                                  child: Visibility(
+                                    visible: !isHovering1ndVideo &&
+                                        !_controller.value
+                                            .isPlaying, // Show the button only when hovering
+
+                                    child: FloatingActionButton(
+                                      backgroundColor: Colors.transparent,
+                                      onPressed: () {
+                                        _playPauseVideo1();
+                                        setState(() {
+                                          _controller.value.isPlaying
+                                              ? _controller.pause()
+                                              : _controller.play();
+                                        });
+                                      },
+                                      child: Icon(
+                                        _controller.value.isPlaying
+                                            ? Icons
+                                                .pause_circle_outline_outlined
+                                            : Icons.play_arrow_rounded,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 Positioned.fill(
@@ -300,6 +449,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                     child: FloatingActionButton(
                                       backgroundColor: Colors.transparent,
                                       onPressed: () {
+                                        _playPauseVideo1();
                                         setState(() {
                                           _controller.value.isPlaying
                                               ? _controller.pause()
@@ -321,10 +471,10 @@ class _HomePageScreenState extends State<HomePageScreen> {
                           : Container(),
                     ),
                     SizedBox(
-                      height: MediaQuery.sizeOf(context).height / 15,
+                      height: height / 15,
                     ),
                     SizedBox(
-                      width: MediaQuery.sizeOf(context).width / 4.3,
+                      width: width / 4.3,
                       child: _controller2.value.isInitialized
                           ? MouseRegion(
                               onHover: (event) {
@@ -339,13 +489,38 @@ class _HomePageScreenState extends State<HomePageScreen> {
                               },
                               child: Stack(children: [
                                 SizedBox(
-                                  width: MediaQuery.sizeOf(context).width / 4.3,
+                                  width: width / 4.3,
                                   child: AspectRatio(
                                     aspectRatio: 16 / 9,
                                     child: ClipRRect(
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(15)),
-                                        child: VideoPlayer(_controller2)),
+                                        child: _buildVideoPlayer(_controller2,
+                                            _isPlaying2, _playPauseVideo2)),
+                                  ),
+                                ),
+                                Positioned.fill(
+                                  child: Visibility(
+                                    visible: !isHovering2 &&
+                                        !_controller2.value.isPlaying,
+                                    child: FloatingActionButton(
+                                      backgroundColor: Colors.transparent,
+                                      onPressed: () {
+                                        _playPauseVideo2();
+                                        setState(() {
+                                          _controller2.value.isPlaying
+                                              ? _controller2.pause()
+                                              : _controller2.play();
+                                        });
+                                      },
+                                      child: Icon(
+                                        _controller2.value.isPlaying
+                                            ? Icons
+                                                .pause_circle_outline_outlined
+                                            : Icons.play_arrow_rounded,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 Positioned.fill(
@@ -354,6 +529,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                     child: FloatingActionButton(
                                       backgroundColor: Colors.transparent,
                                       onPressed: () {
+                                        _playPauseVideo2();
                                         setState(() {
                                           _controller2.value.isPlaying
                                               ? _controller2.pause()
@@ -377,8 +553,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                   ],
                 ),
                 SizedBox(
-                  width: MediaQuery.sizeOf(context).width / 2.8,
-                  // height: MediaQuery.sizeOf(context).height / 4,
+                  width: width / 2.8,
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 15),
                     child: Column(
@@ -399,16 +574,38 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                 },
                                 child: Stack(children: [
                                   SizedBox(
-                                    width:
-                                        MediaQuery.sizeOf(context).width / 2.8,
-                                    // height:
-                                    //     MediaQuery.sizeOf(context).height / 1.8,
+                                    width: width / 2.8,
                                     child: AspectRatio(
                                       aspectRatio: 16 / 9,
                                       child: ClipRRect(
                                           borderRadius: const BorderRadius.all(
                                               Radius.circular(15)),
-                                          child: VideoPlayer(_controller3)),
+                                          child: _buildVideoPlayer(_controller3,
+                                              _isPlaying3, _playPauseVideo3)),
+                                    ),
+                                  ),
+                                  Positioned.fill(
+                                    child: Visibility(
+                                      visible: !isHovering3 &&
+                                          !_controller3.value.isPlaying,
+                                      child: FloatingActionButton(
+                                        backgroundColor: Colors.transparent,
+                                        onPressed: () {
+                                          _playPauseVideo3();
+                                          setState(() {
+                                            _controller3.value.isPlaying
+                                                ? _controller3.pause()
+                                                : _controller3.play();
+                                          });
+                                        },
+                                        child: Icon(
+                                          _controller3.value.isPlaying
+                                              ? Icons
+                                                  .pause_circle_outline_outlined
+                                              : Icons.play_arrow_rounded,
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                   Positioned.fill(
@@ -417,6 +614,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                       child: FloatingActionButton(
                                         backgroundColor: Colors.transparent,
                                         onPressed: () {
+                                          _playPauseVideo3();
                                           setState(() {
                                             _controller3.value.isPlaying
                                                 ? _controller3.pause()
@@ -437,17 +635,16 @@ class _HomePageScreenState extends State<HomePageScreen> {
                               )
                             : Container(),
                         SizedBox(
-                          height: MediaQuery.sizeOf(context).height / 30,
+                          height: height / 30,
                         ),
-                        // Expanded(child: SizedBox()),
                         Align(
                           alignment: Alignment.center,
                           child: Text(
-                            "Experience the workspace in a whole new dimension",
+                            "Explore, Beyond, Boundaries.",
                             textAlign: TextAlign.center,
                             style: GoogleFonts.montaga(
                               color: Colors.white,
-                              fontSize: MediaQuery.sizeOf(context).width * 0.02,
+                              fontSize: width * 0.024,
                             ),
                           ),
                         )
@@ -458,7 +655,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                 Column(
                   children: [
                     SizedBox(
-                      width: MediaQuery.sizeOf(context).width / 4.3,
+                      width: width / 4.3,
                       child: _controller4.value.isInitialized
                           ? MouseRegion(
                               onHover: (event) {
@@ -473,13 +670,38 @@ class _HomePageScreenState extends State<HomePageScreen> {
                               },
                               child: Stack(children: [
                                 SizedBox(
-                                  width: MediaQuery.sizeOf(context).width / 4.3,
+                                  width: width / 4.3,
                                   child: AspectRatio(
                                     aspectRatio: 16 / 9,
                                     child: ClipRRect(
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(15)),
-                                        child: VideoPlayer(_controller4)),
+                                        child: _buildVideoPlayer(_controller4,
+                                            _isPlaying4, _playPauseVideo4)),
+                                  ),
+                                ),
+                                Positioned.fill(
+                                  child: Visibility(
+                                    visible: !isHovering4 &&
+                                        !_controller4.value.isPlaying,
+                                    child: FloatingActionButton(
+                                      backgroundColor: Colors.transparent,
+                                      onPressed: () {
+                                        _playPauseVideo4();
+                                        setState(() {
+                                          _controller4.value.isPlaying
+                                              ? _controller4.pause()
+                                              : _controller4.play();
+                                        });
+                                      },
+                                      child: Icon(
+                                        _controller4.value.isPlaying
+                                            ? Icons
+                                                .pause_circle_outline_outlined
+                                            : Icons.play_arrow_rounded,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 Positioned.fill(
@@ -488,6 +710,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                     child: FloatingActionButton(
                                       backgroundColor: Colors.transparent,
                                       onPressed: () {
+                                        _playPauseVideo4();
                                         setState(() {
                                           _controller4.value.isPlaying
                                               ? _controller4.pause()
@@ -509,10 +732,10 @@ class _HomePageScreenState extends State<HomePageScreen> {
                           : Container(),
                     ),
                     SizedBox(
-                      height: MediaQuery.sizeOf(context).height / 15,
+                      height: height / 15,
                     ),
                     SizedBox(
-                      width: MediaQuery.sizeOf(context).width / 4.3,
+                      width: width / 4.3,
                       child: _controller5.value.isInitialized
                           ? MouseRegion(
                               onHover: (event) {
@@ -527,13 +750,38 @@ class _HomePageScreenState extends State<HomePageScreen> {
                               },
                               child: Stack(children: [
                                 SizedBox(
-                                  width: MediaQuery.sizeOf(context).width / 4.3,
+                                  width: width / 4.3,
                                   child: AspectRatio(
                                     aspectRatio: 16 / 9,
                                     child: ClipRRect(
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(15)),
-                                        child: VideoPlayer(_controller5)),
+                                        child: _buildVideoPlayer(_controller5,
+                                            _isPlaying5, _playPauseVideo5)),
+                                  ),
+                                ),
+                                Positioned.fill(
+                                  child: Visibility(
+                                    visible: !isHovering2ndVideo &&
+                                        !_controller5.value.isPlaying,
+                                    child: FloatingActionButton(
+                                      backgroundColor: Colors.transparent,
+                                      onPressed: () {
+                                        _playPauseVideo5();
+                                        setState(() {
+                                          _controller5.value.isPlaying
+                                              ? _controller5.pause()
+                                              : _controller5.play();
+                                        });
+                                      },
+                                      child: Icon(
+                                        _controller5.value.isPlaying
+                                            ? Icons
+                                                .pause_circle_outline_outlined
+                                            : Icons.play_arrow_rounded,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 Positioned.fill(
@@ -542,6 +790,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                     child: FloatingActionButton(
                                       backgroundColor: Colors.transparent,
                                       onPressed: () {
+                                        _playPauseVideo5();
                                         setState(() {
                                           _controller5.value.isPlaying
                                               ? _controller5.pause()
@@ -568,29 +817,27 @@ class _HomePageScreenState extends State<HomePageScreen> {
             ),
           ),
           SizedBox(
-            height: MediaQuery.sizeOf(context).height / 42,
+            height: height / 42,
           ),
           Center(
             child: Text(
               "What can you do in corllel",
               style: GoogleFonts.oxygen(
-                  fontSize: MediaQuery.sizeOf(context).width * 0.02,
-                  color: const Color(0xFFFF40E5)),
+                  fontSize: width * 0.015, color: const Color(0xFFFF40E5)),
             ),
           ),
           SizedBox(
-            height: MediaQuery.sizeOf(context).height / 48,
+            height: height / 48,
           ),
           Center(
             child: Text(
               "Corllel offers a Variety of activities for users",
               style: GoogleFonts.montaga(
-                  fontSize: MediaQuery.sizeOf(context).width * 0.023,
-                  color: Colors.white),
+                  fontSize: width * 0.016, color: Colors.white),
             ),
           ),
           SizedBox(
-            height: MediaQuery.sizeOf(context).height / 14,
+            height: height / 14,
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -600,11 +847,10 @@ class _HomePageScreenState extends State<HomePageScreen> {
                 Column(
                   children: [
                     TestimonialRow(
-                      imageName: 'assets/images/j3.png',
-                      name: 'Customize your avatar',
+                      imageName: 'assets/images/build.png',
+                      name: 'Build your own Avatar',
                       text:
-                          'Lorem ipsum dolor sit amet consectetur. Adipiscing\netiam odio etiam vitae dictum ',
-                      discover: 'Discover More',
+                          "Customize every detail, from hairstyle to clothing, to create a unique representation of yourself in the virtual world.",
                       onTap: () {
                         Navigator.push(
                           context,
@@ -614,14 +860,13 @@ class _HomePageScreenState extends State<HomePageScreen> {
                       },
                     ),
                     SizedBox(
-                      height: MediaQuery.sizeOf(context).height / 17,
+                      height: height / 9,
                     ),
                     TestimonialRow(
-                      imageName: 'assets/images/j3.png',
-                      name: 'Create your workspace',
+                      imageName: 'assets/images/going.png',
+                      name: 'Going Beyond Time in Virtual World',
                       text:
-                          'Lorem ipsum dolor sit amet consectetur. Adipiscing\netiam odio etiam vitae dictum ',
-                      discover: 'Discover More',
+                          "Merge the boundaries of reality and virtuality. Immerse yourself in experiences that blur the lines between the physical and digital worlds",
                       onTap: () {
                         Navigator.push(
                           context,
@@ -631,32 +876,17 @@ class _HomePageScreenState extends State<HomePageScreen> {
                       },
                     ),
                     SizedBox(
-                      height: MediaQuery.sizeOf(context).height / 17,
-                    ),
-                    TestimonialRow(
-                      imageName: 'assets/images/j3.png',
-                      name: 'Feel like real',
-                      text:
-                          'Lorem ipsum dolor sit amet consectetur. Adipiscing\netiam odio etiam vitae dictum ',
-                      discover: 'Discover More',
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SizedBox()),
-                        );
-                      },
+                      height: height / 17,
                     ),
                   ],
                 ),
                 Column(
                   children: [
                     TestimonialRow(
-                      imageName: 'assets/images/j8.png',
-                      name: 'Create VR experience',
+                      imageName: 'assets/images/3d.png',
+                      name: '3D Models & Assets',
                       text:
-                          'Lorem ipsum dolor sit amet consectetur. Adipiscing\netiam odio etiam vitae dictum ',
-                      discover: 'Discover More',
+                          "Collection of meticulously crafted 3D models and assets. Explore, create, and bring your visions to life with ease, thanks to our high-quality assets designed to fuel your creativity.",
                       onTap: () {
                         Navigator.push(
                           context,
@@ -666,14 +896,13 @@ class _HomePageScreenState extends State<HomePageScreen> {
                       },
                     ),
                     SizedBox(
-                      height: MediaQuery.sizeOf(context).height / 17,
+                      height: height / 17,
                     ),
                     TestimonialRow(
-                      imageName: 'assets/images/j3.png',
-                      name: 'Customize your workspace ',
+                      imageName: 'assets/images/dive.png',
+                      name: 'Dive Into Reality ',
                       text:
-                          'Lorem ipsum dolor sit amet consectetur. Adipiscing\netiam odio etiam vitae dictum ',
-                      discover: 'Discover More',
+                          "Immerse yourself in the heart of epic battles and become the ultimate warrior? Get ready to experience the adrenaline rush of combat like never before.",
                       onTap: () {
                         Navigator.push(
                           context,
@@ -683,21 +912,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                       },
                     ),
                     SizedBox(
-                      height: MediaQuery.sizeOf(context).height / 17,
-                    ),
-                    TestimonialRow(
-                      imageName: 'assets/images/j3.png',
-                      name: 'Customize your avatar',
-                      text:
-                          'Lorem ipsum dolor sit amet consectetur. Adipiscing\netiam odio etiam vitae dictum ',
-                      discover: 'Discover More',
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SizedBox()),
-                        );
-                      },
+                      height: height / 20,
                     ),
                   ],
                 )
@@ -705,96 +920,23 @@ class _HomePageScreenState extends State<HomePageScreen> {
             ),
           ),
           SizedBox(
-            height: MediaQuery.sizeOf(context).height / 9,
-          ),
-          Container(
-            height: MediaQuery.sizeOf(context).height / 1.5,
-            width: MediaQuery.sizeOf(context).width,
-            decoration: const BoxDecoration(
-                image:
-                    DecorationImage(image: AssetImage("assets/images/j7.png"))),
-            child: Center(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.sizeOf(context).height / 15,
-                  ),
-                  Text(
-                    "",
-                    style: GoogleFonts.montaga(
-                        fontSize: MediaQuery.sizeOf(context).width * 0.02,
-                        color: const Color(0xFFFF40E5)),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.sizeOf(context).height / 20,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: MediaQuery.sizeOf(context).width / 5),
-                    child: Text(
-                      "Let's explore the virtual world through corllel ",
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.montaga(
-                          fontSize: MediaQuery.sizeOf(context).width * 0.04,
-                          color: Colors.white),
-                    ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.sizeOf(context).height / 20,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                        foregroundColor: const Color(0xFFFF40E5),
-                        backgroundColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6.0),
-                          side: const BorderSide(color: Color(0xFFFF40E5)),
-                        )),
-                    child: Text(
-                      'Discover Now',
-                      style: GoogleFonts.montserrat(
-                        color: const Color(0xFFFF40E5),
-                        fontSize: MediaQuery.sizeOf(context).width * 0.012,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(
-            height: MediaQuery.sizeOf(context).height / 7,
+            height: height * 0.02,
           ),
           Center(
             child: Text(
-              "Building together",
+              "Building your avatar together",
               style: GoogleFonts.montaga(
-                  fontSize: MediaQuery.sizeOf(context).width * 0.02,
-                  color: const Color(0xFFFF40E5)),
+                  fontSize: width * 0.02, color: const Color(0xFFFF40E5)),
             ),
           ),
           SizedBox(
-            height: MediaQuery.sizeOf(context).height / 18,
-          ),
-          Center(
-            child: Text(
-              "See how creators are making the\nmetaverse a reality",
-              textAlign: TextAlign.center,
-              style: GoogleFonts.oxygen(
-                  fontWeight: FontWeight.bold,
-                  fontSize: MediaQuery.sizeOf(context).width * 0.023,
-                  color: Colors.white),
-            ),
-          ),
-          SizedBox(
-            height: MediaQuery.sizeOf(context).height / 25,
+            height: height / 25,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Container(
-                width: MediaQuery.sizeOf(context).width / 4.3,
+                width: width / 4.3,
                 margin: const EdgeInsets.all(10),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
@@ -804,17 +946,17 @@ class _HomePageScreenState extends State<HomePageScreen> {
                 ),
               ),
               Container(
-                width: MediaQuery.sizeOf(context).width / 3.1,
+                width: width / 3.1,
                 margin: const EdgeInsets.all(10),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: Image.asset(
-                    'assets/images/j5.png',
+                    'assets/images/j.png',
                   ),
                 ),
               ),
               Container(
-                width: MediaQuery.sizeOf(context).width / 4.3,
+                width: width / 4.3,
                 margin: const EdgeInsets.all(10),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
@@ -826,10 +968,36 @@ class _HomePageScreenState extends State<HomePageScreen> {
             ],
           ),
           SizedBox(
-            height: MediaQuery.sizeOf(context).height / 8,
+            height: height / 8,
           ),
           const FooterSection()
         ]),
+      ),
+    );
+  }
+
+  Widget _buildVideoPlayer(VideoPlayerController controller, bool isPlaying,
+      VoidCallback playPauseCallback) {
+    return Visibility(
+      visible: controller.value.isInitialized,
+      child: AspectRatio(
+        aspectRatio: controller.value.aspectRatio,
+        child: Stack(
+          children: [
+            VideoPlayer(controller),
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: () {
+                  playPauseCallback();
+                  setState(() {
+                    isPlaying ? controller.pause() : controller.play();
+                  });
+                },
+                child: Container(color: Colors.transparent),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -839,7 +1007,6 @@ class TestimonialRow extends StatelessWidget {
   final String imageName;
   final String name;
   final String text;
-  final String discover;
   final VoidCallback? onTap;
 
   const TestimonialRow({
@@ -847,22 +1014,22 @@ class TestimonialRow extends StatelessWidget {
     required this.imageName,
     required this.name,
     required this.text,
-    required this.discover,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final height = size.height;
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 50),
-          child: Image.asset(
-            imageName,
-            height: MediaQuery.sizeOf(context).height / 11,
-          ),
+        Image.asset(
+          imageName,
+          width: width * 0.05,
         ),
-        SizedBox(width: MediaQuery.sizeOf(context).width / 52),
+        SizedBox(width: width / 52),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -870,43 +1037,23 @@ class TestimonialRow extends StatelessWidget {
               name,
               style: GoogleFonts.oxygen(
                 fontWeight: FontWeight.bold,
-                fontSize: MediaQuery.sizeOf(context).width * 0.014,
+                fontSize: width * 0.014,
                 color: Colors.white,
               ),
             ),
-            SizedBox(height: MediaQuery.sizeOf(context).height / 55),
-            Text(
-              text,
-              style: GoogleFonts.oxygen(
-                fontSize: MediaQuery.sizeOf(context).width * 0.011,
-                fontWeight: FontWeight.w300,
-                color: Colors.white,
-              ),
-            ),
-            SizedBox(height: MediaQuery.sizeOf(context).height / 60),
-            Row(
-              children: [
-                InkWell(
-                  onTap: onTap,
-                  child: Text(
-                    discover,
-                    style: GoogleFonts.oxygen(
-                        fontSize: MediaQuery.sizeOf(context).width * 0.01,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFFFF40E5)),
-                  ),
+            SizedBox(height: height / 55),
+            SizedBox(
+              width: width / 3.8,
+              child: Text(
+                text,
+                style: GoogleFonts.oxygen(
+                  fontSize: width * 0.011,
+                  fontWeight: FontWeight.w300,
+                  color: Colors.white,
                 ),
-                SizedBox(width: MediaQuery.sizeOf(context).width / 84),
-                Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        border: Border.all(
-                            color: const Color.fromARGB(255, 255, 255, 255))),
-                    child: Icon(Icons.arrow_forward,
-                        size: MediaQuery.sizeOf(context).width * 0.01,
-                        color: Colors.white)),
-              ],
+              ),
             ),
+            SizedBox(height: height / 60),
           ],
         ),
       ],

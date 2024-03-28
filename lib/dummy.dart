@@ -14,6 +14,7 @@ class MyApp2 extends StatelessWidget {
     );
   }
 }
+//class
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onScrollToBottom;

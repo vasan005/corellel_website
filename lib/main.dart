@@ -1,29 +1,46 @@
-// main.dart
-
-import 'package:beamer/beamer.dart';
-import 'package:corllel/Navigation_Screens/home_location.dart';
+import 'package:corllel/Mobile_Screens/gaming_page.dart';
+import 'package:corllel/Mobile_Screens/home_page.dart';
+import 'package:corllel/Mobile_Screens/metaworld_mobile.dart';
+import 'package:corllel/Round_Animation.dart';
+import 'package:corllel/Screens/Gaming_Screen.dart';
+import 'package:corllel/Screens/Home_Screen.dart';
+import 'package:corllel/Screens/MetaWorld_Screen.dart';
 import 'package:corllel/dummy.dart';
+import 'package:corllel/responseive_layout.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      routeInformationParser: BeamerParser(),
-      routerDelegate: BeamerDelegate(
-        locationBuilder: (routeInformation, _) =>
-            HomeLocation(routeInformation),
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
+      home:
+          // Dummy()
+          ResponsiveLayout(
+              mobileBody: const HomeScreenMobile(),
+              desktopBody: const RoundAnimation()),
+      routes: {
+        '/home': (context) => ResponsiveLayout(
+            desktopBody: const HomePageScreen(),
+            mobileBody: const HomeScreenMobile()),
+        '/metaworld': (context) => ResponsiveLayout(
+              desktopBody: const MetaWorldScreen(),
+              mobileBody: const MetaWorldMobileScreen(),
+            ),
+        '/gaming': (context) => ResponsiveLayout(
+            desktopBody: const GamingScreenDesktop(),
+            mobileBody: const GamingMobile()),
+      },
     );
-    // return MaterialApp(
-    //   home: MyApp2(),
-    // );
   }
 }

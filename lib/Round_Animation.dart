@@ -1,6 +1,5 @@
 // ignore_for_file: file_names, library_private_types_in_public_api
 
-import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_circular_text/circular_text.dart';
 
@@ -135,15 +134,15 @@ class _RoundAnimationState extends State<RoundAnimation> {
                         ],
                       ),
                     ),
-
                     Positioned(
                       right: MediaQuery.sizeOf(context).width / 4.1,
                       top: MediaQuery.sizeOf(context).height / 2.15,
                       child: InkWell(
                           onTap: () {
                             setState(() {
-                              final beamerKey = Beamer.of(context);
-                              beamerKey.beamToNamed('/home');
+                              Navigator.pop(context);
+                              // Navigate to the Settings screen
+                              Navigator.pushNamed(context, '/home');
                             });
                           },
                           child: Container(

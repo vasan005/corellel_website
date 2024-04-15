@@ -16,13 +16,16 @@ bool isHovering1ndVideo2 = false;
 
 class _MetaWorldScreenState extends State<MetaWorldScreen> {
   final LinearGradient _gradient = LinearGradient(
-    colors: <Color>[Color.fromARGB(255, 195, 64, 255), Color(0xff0058CA)],
+    colors: <Color>[
+      Color.fromARGB(255, 195, 64, 255),
+      Color(0xff0058CA),
+    ],
   );
 
   final LinearGradient _gradient2 = LinearGradient(
     colors: <Color>[
       Color.fromARGB(255, 64, 191, 255),
-      Color.fromARGB(255, 0, 152, 203)
+      Color.fromARGB(255, 0, 152, 203),
     ],
   );
 
@@ -32,19 +35,23 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
   late bool _isPlaying2;
   late ScrollController _scrollController;
 
+  late ScrollController scrollControllerBottom;
+
   @override
   void initState() {
     super.initState();
+
+    scrollControllerBottom = ScrollController();
     _videoController1 =
         // ignore: deprecated_member_use
-        VideoPlayerController.network('assets/images/DigAmenD full service.mp4')
+        VideoPlayerController.network('assets/images/digamend.mp4')
           ..initialize().then((_) {
             setState(() {});
           });
     super.initState();
     _videoController2 =
         // ignore: deprecated_member_use
-        VideoPlayerController.network('assets/images/DigAmenD full service.mp4')
+        VideoPlayerController.network('assets/images/digamend.mp4')
           ..initialize().then((_) {
             setState(() {});
           });
@@ -60,6 +67,7 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
   void dispose() {
     _videoController1.dispose();
     _videoController2.dispose();
+    // Dispose ScrollController
     _scrollController.dispose();
     super.dispose();
   }
@@ -77,9 +85,11 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
   }
 
   void _handleScroll() {
+    // Check if any video is playing and whether it is visible on the screen
     if ((_isPlaying1 || _isPlaying2) &&
         mounted &&
         _scrollController.hasClients) {
+      // Check if the video widgets are within the viewport
       final double bottomPosition1 = _scrollController.offset +
           _scrollController.position.viewportDimension;
       final double bottomPosition2 = _scrollController.offset +
@@ -90,10 +100,12 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
       final double topPosition2 = _scrollController.offset;
       final double topPosition3 = _scrollController.offset;
 
+      // Check if the video is outside the viewport
       if ((topPosition1 > _videoController1.value.size.height / 2 &&
               bottomPosition1 > _videoController1.value.size.height / 2) ||
           (topPosition2 > _videoController2.value.size.height &&
               bottomPosition2 > _videoController2.value.size.height)) {
+        // If the video is outside the viewport, pause it
         setState(() {
           _isPlaying1 = false;
           _isPlaying2 = false;
@@ -112,38 +124,140 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
-        controller: _scrollController,
+        controller: scrollControllerBottom,
         child: Column(
           children: [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.sizeOf(context).width / 14,
+                  vertical: height / 30),
+              child: Row(
+                children: [
+                  Text(
+                    "Corllel",
+                    style: GoogleFonts.montaga(
+                        color: Colors.white,
+                        decoration: TextDecoration.none,
+                        fontSize: MediaQuery.sizeOf(context).width * 0.02),
+                  ),
+                  const Expanded(child: SizedBox()),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          // Close the drawer
+                          Navigator.pop(context);
+                          // Navigate to the Home screen
+                          Navigator.pushNamed(context, '/home');
+                        },
+                        child: Text(
+                          "Home",
+                          style: GoogleFonts.oxygen(
+                            fontSize: width * 0.012,
+                            color: const Color(0xFFFF40E5),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: width / 35,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          // Close the drawer
+                          Navigator.pop(context);
+                          // Navigate to the Home screen
+                          Navigator.pushNamed(context, '/metaworld');
+                        },
+                        child: Text(
+                          "MetaWorld",
+                          style: GoogleFonts.oxygen(
+                              fontSize: width * 0.012,
+                              color: const Color(0xFFFF40E5),
+                              decoration: TextDecoration.underline,
+                              decorationColor: const Color(0xFFFF40E5)),
+                        ),
+                      ),
+                      SizedBox(
+                        width: width / 35,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          // Close the drawer
+                          Navigator.pop(context);
+                          // Navigate to the Home screen
+                          Navigator.pushNamed(context, '/gaming');
+                        },
+                        child: Text(
+                          "Gaming",
+                          style: GoogleFonts.oxygen(
+                            fontSize: width * 0.012,
+                            color: const Color(0xFFFF40E5),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: width / 35,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          _scrollToYellowContainer();
+                        },
+                        child: Container(
+                          decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: width / 100, vertical: height / 80),
+                            child: Text(
+                              "Contact",
+                              style: GoogleFonts.oxygen(
+                                fontSize: width * 0.012,
+                                fontWeight: FontWeight.w500,
+                                color: const Color.fromARGB(255, 0, 0, 0),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: width / 20,
               ),
               child: Padding(
-                padding: EdgeInsets.only(top: height / 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      'assets/images/girlwithstar.png',
-                      width: width / 2.5,
-                    ),
-                    SizedBox(width: width / 22),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: width / 2.2,
-                          child: Text(
-                            maxLines: 4,
-                            'Virtual universe of endless exploration',
-                            style: GoogleFonts.montaga(
-                                color: Colors.white, fontSize: width * 0.046),
+                padding: EdgeInsets.only(top: 0),
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        'assets/images/girlwithstar.png',
+                        width: width / 2.5,
+                      ),
+                      SizedBox(width: width / 22),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: width / 2.2,
+                            child: Text(
+                              maxLines: 4,
+                              'Virtual universe of endless exploration',
+                              style: GoogleFonts.montaga(
+                                  color: Colors.white, fontSize: width * 0.046),
+                            ),
                           ),
-                        ),
-                      ],
-                    )
-                  ],
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -287,6 +401,7 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
                             style: GoogleFonts.oxygen(
                                 color: Colors.white, fontSize: width * 0.015),
                           ),
+                          // Padding(padding: EdgeInsets.only(top: height / 45)),
                           SizedBox(height: height * 0.012),
                           SizedBox(
                             width: width / 4.8,
@@ -400,6 +515,7 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
                 SizedBox(
                   height: height / 1.55,
                   child: Container(
+                    // height: height / 1.5,
                     width: width / 4,
                     decoration: BoxDecoration(
                         color: Color(0xff090823),
@@ -786,7 +902,7 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
               ],
             ),
             SizedBox(
-              height: height / 5,
+              height: height / 6.5,
             ),
             FooterSection()
           ],
@@ -813,12 +929,22 @@ class _MetaWorldScreenState extends State<MetaWorldScreen> {
                     isPlaying ? controller.pause() : controller.play();
                   });
                 },
+                // Adding a transparent layer to capture the tap for play/pause
                 child: Container(color: Colors.transparent),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  void _scrollToYellowContainer() {
+    final double offset = scrollControllerBottom.position.maxScrollExtent;
+    scrollControllerBottom.animateTo(
+      offset,
+      duration: const Duration(milliseconds: 1000),
+      curve: Curves.easeOut,
     );
   }
 }

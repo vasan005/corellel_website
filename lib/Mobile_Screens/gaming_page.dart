@@ -1,17 +1,18 @@
-// ignore_for_file: prefer_typing_uninitialized_variables, unused_field, unused_element
+// ignore_for_file: prefer_typing_uninitialized_variables, unused_field, unused_element, file_names, unused_import
 
 import 'dart:async';
 
 import 'package:corllel/Common_Screens/footer.dart';
+import 'package:corllel/Mobile_Screens/footer_mobile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
 
-class GamingScreenDesktop extends StatefulWidget {
-  const GamingScreenDesktop({Key? key}) : super(key: key);
+class GamingMobile extends StatefulWidget {
+  const GamingMobile({super.key});
 
   @override
-  State<GamingScreenDesktop> createState() => _GamingScreenDesktopState();
+  State<GamingMobile> createState() => _GamingMobileState();
 }
 
 bool _isHovered = false;
@@ -21,7 +22,7 @@ bool isHovering1ndVideo = false;
 bool isHovering2ndVideo = false;
 bool isHoveringBigVideo = false;
 
-class _GamingScreenDesktopState extends State<GamingScreenDesktop> {
+class _GamingMobileState extends State<GamingMobile> {
   final double _scrollSpeed = 20.0;
   late ScrollController _scrollController1;
   bool _reverse = false;
@@ -35,7 +36,7 @@ class _GamingScreenDesktopState extends State<GamingScreenDesktop> {
   late ScrollController _scrollController;
 
   void _startScrolling() {
-    Future.delayed(const Duration(milliseconds: 500)).then((_) {
+    Future.delayed(const Duration(milliseconds: -100)).then((_) {
       _scrollController1
           .animateTo(
         _reverse ? _scrollController1.position.maxScrollExtent : 0.0,
@@ -58,7 +59,9 @@ class _GamingScreenDesktopState extends State<GamingScreenDesktop> {
   @override
   void initState() {
     super.initState();
+
     scrollControllerBottom = ScrollController();
+
     // ignore: deprecated_member_use
     _controller =
         // ignore: deprecated_member_use
@@ -78,7 +81,7 @@ class _GamingScreenDesktopState extends State<GamingScreenDesktop> {
     super.initState();
     bigScreenVideoController =
         // ignore: deprecated_member_use
-        VideoPlayerController.network('assets/images/DigAmenD full service.mp4')
+        VideoPlayerController.network('assets/images/bigscreen1.mp4')
           ..initialize().then((_) {
             // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
             setState(() {});
@@ -164,6 +167,15 @@ class _GamingScreenDesktopState extends State<GamingScreenDesktop> {
     }
   }
 
+  void _scrollToYellowContainer() {
+    final double offset = scrollControllerBottom.position.maxScrollExtent;
+    scrollControllerBottom.animateTo(
+      offset,
+      duration: const Duration(milliseconds: 1000),
+      curve: Curves.easeOut,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -172,6 +184,105 @@ class _GamingScreenDesktopState extends State<GamingScreenDesktop> {
 
     return Scaffold(
       backgroundColor: Colors.black,
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.black,
+        title: Text(
+          'Corllel',
+          style: GoogleFonts.montaga(
+            color: Colors.white,
+            fontSize: MediaQuery.sizeOf(context).width * 0.04,
+          ),
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      drawer: Padding(
+        padding: const EdgeInsets.only(top: 1.0),
+        child: Container(
+          width:
+              MediaQuery.of(context).size.width * 0.6, // adjust width if needed
+          decoration: const BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(20.0),
+                bottomRight: Radius.circular(20.0),
+              ),
+              border: Border(
+                  right: BorderSide(
+                      color: Color.fromARGB(255, 141, 139, 139), width: 1),
+                  bottom: BorderSide(
+                      color: Color.fromARGB(255, 141, 139, 139), width: 1),
+                  top: BorderSide(
+                      color: Color.fromARGB(255, 141, 139, 139), width: 1))
+              // border: Border.all(
+              //     color: const Color.fromARGB(255, 155, 155, 155), width: 1),
+              ),
+          child: Drawer(
+            backgroundColor: Colors.transparent,
+            child: ListView(
+              // padding: EdgeInsets.zero,
+              children: <Widget>[
+                ListTile(
+                  title: const Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Icon(Icons.close, color: Colors.white),
+                    ],
+                  ),
+                  onTap: () {
+                    // Close the drawer
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: Text(
+                    'Home',
+                    style: GoogleFonts.montaga(
+                        color: Color.fromARGB(255, 255, 255, 255)),
+                  ),
+                  onTap: () {
+                    // Close the drawer
+                    Navigator.pop(context);
+                    // Navigate to the Home screen
+                    Navigator.pushNamed(context, '/home');
+                  },
+                ),
+                ListTile(
+                  title: Text('Metaworld',
+                      style: GoogleFonts.montaga(
+                          color: Color.fromARGB(255, 255, 255, 255))),
+                  onTap: () {
+                    // Close the drawer
+                    Navigator.pop(context);
+                    // Navigate to the Settings screen
+                    Navigator.pushNamed(context, '/metaworld');
+                  },
+                ),
+                ListTile(
+                  title: Text('Gaming',
+                      style: GoogleFonts.montaga(color: Color(0xFFFF40E5))),
+                  onTap: () {
+                    // Close the drawer
+                    Navigator.pop(context);
+                    // Navigate to the Settings screen
+                    Navigator.pushNamed(context, '/gaming');
+                  },
+                ),
+                ListTile(
+                  title: Text('Contact',
+                      style: GoogleFonts.montaga(
+                          fontSize: MediaQuery.sizeOf(context).width * 0.035,
+                          color: const Color.fromARGB(255, 255, 255, 255))),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _scrollToYellowContainer();
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         controller: scrollControllerBottom,
         child: SizedBox(
@@ -179,107 +290,6 @@ class _GamingScreenDesktopState extends State<GamingScreenDesktop> {
             controller: _scrollController,
             child: Column(
               children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.sizeOf(context).width / 14,
-                      vertical: height / 30),
-                  child: Row(
-                    children: [
-                      Text(
-                        "Corllel",
-                        style: GoogleFonts.montaga(
-                            color: Colors.white,
-                            decoration: TextDecoration.none,
-                            fontSize: MediaQuery.sizeOf(context).width * 0.02),
-                      ),
-                      const Expanded(child: SizedBox()),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              // Close the drawer
-                              Navigator.pop(context);
-                              // Navigate to the Home screen
-                              Navigator.pushNamed(context, '/home');
-                            },
-                            child: Text(
-                              "Home",
-                              style: GoogleFonts.oxygen(
-                                fontSize: width * 0.012,
-                                color: const Color(0xFFFF40E5),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: width / 35,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              // Close the drawer
-                              Navigator.pop(context);
-                              // Navigate to the Home screen
-                              Navigator.pushNamed(context, '/metaworld');
-                            },
-                            child: Text(
-                              "MetaWorld",
-                              style: GoogleFonts.oxygen(
-                                fontSize: width * 0.012,
-                                color: const Color(0xFFFF40E5),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: width / 35,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              // Close the drawer
-                              Navigator.pop(context);
-                              // Navigate to the Home screen
-                              Navigator.pushNamed(context, '/gaming');
-                            },
-                            child: Text(
-                              "Gaming",
-                              style: GoogleFonts.oxygen(
-                                  fontSize: width * 0.012,
-                                  color: const Color(0xFFFF40E5),
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: const Color(0xFFFF40E5)),
-                            ),
-                          ),
-                          SizedBox(
-                            width: width / 35,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              _scrollToYellowContainer();
-                            },
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10))),
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: width / 100,
-                                    vertical: height / 80),
-                                child: Text(
-                                  "Contact",
-                                  style: GoogleFonts.oxygen(
-                                    fontSize: width * 0.012,
-                                    fontWeight: FontWeight.w500,
-                                    color: const Color.fromARGB(255, 0, 0, 0),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
                 SizedBox(
                   height: height / 15,
                 ),
@@ -288,12 +298,12 @@ class _GamingScreenDesktopState extends State<GamingScreenDesktop> {
                     'Discover the new world',
                     style: GoogleFonts.oxygen(
                       color: const Color(0xffFF40E5),
-                      fontSize: width * 0.016,
+                      fontSize: width * 0.025,
                     ),
                   ),
                 ),
                 SizedBox(
-                  height: height / 40,
+                  height: height / 60,
                 ),
                 Center(
                   child: SizedBox(
@@ -325,38 +335,73 @@ class _GamingScreenDesktopState extends State<GamingScreenDesktop> {
                             children: [
                               Image.asset(
                                 'assets/images/Vector1.png',
-                                height: height / 2,
+                                height: height / 7,
                               ),
-                              SizedBox(width: width / 25),
+                              SizedBox(width: width / 55),
                               Image.asset(
                                 'assets/images/Vector2.png',
-                                height: height / 2,
+                                height: height / 7,
                               ),
                               SizedBox(width: width / 25),
                               Image.asset(
                                 'assets/images/Vector3.png',
-                                fit: BoxFit.fill,
-                                height: height / 2,
-                                width: width / 5,
+                                // fit: BoxFit.fill,
+                                height: height / 7,
+                                // width: width / 5,
                               ),
                               SizedBox(width: width / 25),
                               Image.asset('assets/images/Vector4.png',
-                                  height: height / 2),
+                                  height: height / 7),
                               SizedBox(width: width / 25),
                               Image.asset('assets/images/Vector5.png',
-                                  height: height / 2),
+                                  height: height / 7),
                               SizedBox(width: width / 25),
                               Image.asset('assets/images/Vector6.png',
-                                  height: height / 2),
+                                  height: height / 7),
                               SizedBox(width: width / 25),
                               Image.asset('assets/images/Vector7.png',
-                                  height: height / 2),
+                                  height: height / 7),
                               SizedBox(width: width / 25),
                               Image.asset('assets/images/Vector8.png',
-                                  height: height / 2),
+                                  height: height / 7),
                               SizedBox(width: width / 25),
                               Image.asset('assets/images/Vector9.png',
-                                  height: height / 2),
+                                  height: height / 7),
+                              SizedBox(width: width / 25),
+                              Image.asset(
+                                'assets/images/Vector1.png',
+                                height: height / 7,
+                              ),
+                              SizedBox(width: width / 25),
+                              Image.asset(
+                                'assets/images/Vector2.png',
+                                height: height / 7,
+                              ),
+                              SizedBox(width: width / 25),
+                              Image.asset(
+                                'assets/images/Vector3.png',
+                                // fit: BoxFit.fill,
+                                height: height / 7,
+                                // width: width / 5,
+                              ),
+                              SizedBox(width: width / 25),
+                              Image.asset('assets/images/Vector4.png',
+                                  height: height / 7),
+                              SizedBox(width: width / 25),
+                              Image.asset('assets/images/Vector5.png',
+                                  height: height / 7),
+                              SizedBox(width: width / 25),
+                              Image.asset('assets/images/Vector6.png',
+                                  height: height / 7),
+                              SizedBox(width: width / 25),
+                              Image.asset('assets/images/Vector7.png',
+                                  height: height / 7),
+                              SizedBox(width: width / 25),
+                              Image.asset('assets/images/Vector8.png',
+                                  height: height / 7),
+                              SizedBox(width: width / 25),
+                              Image.asset('assets/images/Vector9.png',
+                                  height: height / 7),
                             ],
                           ),
                         ),
@@ -365,72 +410,111 @@ class _GamingScreenDesktopState extends State<GamingScreenDesktop> {
                   ),
                 ),
                 SizedBox(
-                  height: height / 15,
+                  height: height / 35,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xff1F1F1F),
-                      image: const DecorationImage(
-                        image: AssetImage(
-                          "assets/images/experience.png",
-                        ),
-                        fit: BoxFit.fill,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    height: height / 1.5,
-                    width: width / 1.1,
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: Container(
-                            padding: const EdgeInsets.all(20),
-                            color: Colors.black.withOpacity(0.2),
-                            child: Padding(
-                              padding:
-                                  EdgeInsets.only(top: 0, right: width / 6),
-                              child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Experience the people and things around us',
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.montaga(
-                                          color: const Color(0xffF8F8F8),
-                                          fontSize: width * 0.023,
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                    const SizedBox(
-                                      height: 30,
-                                    ),
-                                    SizedBox(
-                                      width: width / 1.8,
-                                      child: Text(
-                                        'Enter the battlefield and play interactive games, explore and make your own avatar. Engage in epic adventures over a variety of virtual environments, unleash your creativity, and connect with gamers worldwide.  ',
-                                        maxLines: 8,
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.oxygen(
-                                          color: const Color(0xffF8F8F8),
-                                          fontSize: width * 0.013,
-                                        ),
-                                      ),
-                                    ),
-                                  ]),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: width / 1.1,
+                      decoration: const BoxDecoration(
+                          image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: AssetImage(
+                                  "assets/images/experience_mobile.png"))),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: width * 0.05, vertical: width * 0.042),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              width: width / 1.8,
+                              child: Text(
+                                'Experience the people and things around us',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.montaga(
+                                    color: const Color(0xffFF40E5),
+                                    fontSize: width * 0.043,
+                                    fontWeight: FontWeight.w400),
+                              ),
                             ),
-                          ),
+                            SizedBox(
+                              height: height * 0.01,
+                            ),
+                            Text(
+                              'Enter the battlefield and play interactive games, explore and make your own avatar. Engage in epic adventures over a variety of virtual environments, unleash your creativity, and connect with gamers worldwide.  ',
+                              maxLines: 8,
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.oxygen(
+                                color: const Color(0xffF8F8F8),
+                                fontSize: width * 0.027,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-                const SizedBox(
-                  height: 0,
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.only(left: 20, right: 20),
+                //   child: Container(
+                //     decoration: BoxDecoration(
+                //       color: const Color(0xff1F1F1F),
+                //       image: const DecorationImage(
+                //         image: AssetImage(
+                //           "assets/images/experience_mobile.png",
+                //         ),
+                //         fit: BoxFit.fill,
+                //       ),
+                //       borderRadius: BorderRadius.circular(20),
+                //     ),
+                //     height: width*0.7,
+                //     width: width / 1.2,
+                //     child: Stack(
+                //       children: [
+                //         Positioned.fill(
+                //           child: Container(
+                //             height: height / 4,
+                //             width: width / 1.2,
+                //             padding: const EdgeInsets.all(10),
+                //             color: Colors.black.withOpacity(0.2),
+                //             child: Column(
+                //                 mainAxisAlignment: MainAxisAlignment.center,
+                //                 crossAxisAlignment: CrossAxisAlignment.center,
+                //                 children: [
+                //                   SizedBox(
+                //                     width: width / 1.8,
+                //                     child: Text(
+                //                       'Experience the people and things around us',
+                //                       textAlign: TextAlign.center,
+                //                       style: GoogleFonts.montaga(
+                //                           color: const Color(0xffFF40E5),
+                //                           fontSize: width * 0.043,
+                //                           fontWeight: FontWeight.w400),
+                //                     ),
+                //                   ),
+                //                   SizedBox(
+                //                     height: height / 40,
+                //                   ),
+                //                   Text(
+                //                     'Enter the battlefield and play interactive games, explore and make your own avatar. Engage in epic adventures over a variety of virtual environments, unleash your creativity, and connect with gamers worldwide.  ',
+                //                     maxLines: 8,
+                //                     textAlign: TextAlign.center,
+                //                     style: GoogleFonts.oxygen(
+                //                       color: const Color(0xffF8F8F8),
+                //                       fontSize: width * 0.027,
+                //                     ),
+                //                   ),
+                //                 ]),
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
                 Padding(
-                  padding: EdgeInsets.only(left: width / 20),
+                  padding: EdgeInsets.only(left: width / 60),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -459,13 +543,13 @@ class _GamingScreenDesktopState extends State<GamingScreenDesktop> {
                                         spreadRadius: 1.0,
                                       ), //BoxShadow
                                     ],
-                                    borderRadius: BorderRadius.circular(15),
+                                    borderRadius: BorderRadius.circular(10),
                                     color: Colors.black),
                                 child: Stack(children: [
                                   SizedBox(
-                                    width: width / 4.5,
+                                    width: width / 4,
                                     child: AspectRatio(
-                                      aspectRatio: 16 / 9,
+                                      aspectRatio: 15 / 9,
                                       child: ClipRRect(
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(12)),
@@ -534,7 +618,7 @@ class _GamingScreenDesktopState extends State<GamingScreenDesktop> {
                           children: [
                             Image.asset(
                               'assets/images/Outlines.png',
-                              width: width / 8,
+                              width: width / 7,
                             ),
                           ],
                         ),
@@ -543,31 +627,20 @@ class _GamingScreenDesktopState extends State<GamingScreenDesktop> {
                         child: SizedBox(),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 90.0, right: width / 20),
+                        padding: EdgeInsets.only(top: 0.0, right: width / 10),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              'Join us as we explore the future',
-                              style: GoogleFonts.montaga(
-                                color: const Color(0xffFF40E5),
-                                fontSize: width * 0.023,
-                              ),
-                            ),
                             SizedBox(
-                              height: height / 28,
-                            ),
-                            SizedBox(
-                              width: width / 3.5,
+                              width: width / 2.5,
                               child: Text(
-                                'A storm brews on a journey to the lost continents of Kumarikandam, Atlantis, and more, where the ultimate Battle Royale unfolds. Survive amidst the ruins and dangers of these ancient lands, but beware, for destruction looms. Only those who find the Mysterious Item can unlock the castle and claim victory before the continents meet their demise.',
-                                maxLines: 20,
+                                'Join us as we explore the future',
                                 textAlign: TextAlign.center,
-                                style: GoogleFonts.oxygen(
-                                    color: const Color(0xffFFFFFF),
-                                    fontSize: width * 0.011,
-                                    fontWeight: FontWeight.w500),
+                                style: GoogleFonts.montaga(
+                                  color: const Color(0xffFF40E5),
+                                  fontSize: width * 0.048,
+                                ),
                               ),
                             ),
                           ],
@@ -575,6 +648,32 @@ class _GamingScreenDesktopState extends State<GamingScreenDesktop> {
                       ),
                     ],
                   ),
+                ),
+                SizedBox(
+                  height: height / 70,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: height / 28,
+                    ),
+                    SizedBox(
+                      width: width / 1.2,
+                      child: Text(
+                        'A storm brews on a journey to the lost continents of Kumarikandam, Atlantis, and more, where the ultimate Battle Royale unfolds. Survive amidst the ruins and dangers of these ancient lands, but beware, for destruction looms. Only those who find the Mysterious Item can unlock the castle and claim victory before the continents meet their demise.',
+                        maxLines: 20,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.oxygen(
+                            color: const Color(0xffFFFFFF),
+                            fontSize: width * 0.024,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: height / 60,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20),
@@ -584,31 +683,20 @@ class _GamingScreenDesktopState extends State<GamingScreenDesktop> {
                     children: [
                       Padding(
                         padding:
-                            EdgeInsets.only(left: width / 18, top: width / 18),
+                            EdgeInsets.only(left: width / 14, top: width / 28),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              'Investigate the unimageable area',
-                              style: GoogleFonts.montaga(
-                                color: const Color(0xffFF40E5),
-                                fontSize: width * 0.023,
-                              ),
-                            ),
                             SizedBox(
-                              height: height / 28,
-                            ),
-                            SizedBox(
-                              width: width / 3,
+                              width: width / 2.5,
                               child: Text(
-                                "Embark on a journey through time with our map of the world's oldest places. Explore ancient civilizations, archaeological wonders, and historic landmarks that have stood the test of time. immerse yourself in the rich tapestry of human history and uncover the secrets of our ancient past",
-                                maxLines: 15,
+                                'Investigate the unimageable area',
                                 textAlign: TextAlign.center,
-                                style: GoogleFonts.oxygen(
-                                    color: const Color(0xffFFFFFF),
-                                    fontSize: width * 0.011,
-                                    fontWeight: FontWeight.w500),
+                                style: GoogleFonts.montaga(
+                                  color: const Color(0xffFF40E5),
+                                  fontSize: width * 0.048,
+                                ),
                               ),
                             ),
                           ],
@@ -621,20 +709,20 @@ class _GamingScreenDesktopState extends State<GamingScreenDesktop> {
                         padding: const EdgeInsets.only(top: 0),
                         child: Image.asset(
                           'assets/images/Outline_right.png',
-                          width: width / 8,
+                          width: width / 7,
                           // height: height/2,
                         ),
                       ),
                       SizedBox(
-                        width: width / 70,
+                        width: width / 50,
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                          right: width / 20,
+                          right: width / 60,
                         ),
                         child: _controller1.value.isInitialized
                             ? Padding(
-                                padding: const EdgeInsets.only(top: 20),
+                                padding: const EdgeInsets.only(top: 6),
                                 child: MouseRegion(
                                   onHover: (event) {
                                     setState(() {
@@ -659,15 +747,15 @@ class _GamingScreenDesktopState extends State<GamingScreenDesktop> {
                                           spreadRadius: 1.0,
                                         ), //BoxShadow
                                       ],
-                                      borderRadius: BorderRadius.circular(15),
+                                      borderRadius: BorderRadius.circular(10),
                                       color: Colors.black,
                                     ),
                                     child: Stack(
                                       children: [
                                         SizedBox(
-                                          width: width / 4.5,
+                                          width: width / 4,
                                           child: AspectRatio(
-                                            aspectRatio: 16 / 9,
+                                            aspectRatio: 15 / 9,
                                             child: ClipRRect(
                                               borderRadius:
                                                   const BorderRadius.all(
@@ -744,79 +832,160 @@ class _GamingScreenDesktopState extends State<GamingScreenDesktop> {
                   ),
                 ),
                 SizedBox(
-                  height: height / 15,
+                  height: height / 48,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xff1F1F1F),
-                      image: const DecorationImage(
-                        image: AssetImage(
-                          "assets/images/explore.png",
-                        ),
-                        fit: BoxFit.fill,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    height: height / 1.9,
-                    width: width / 1.1,
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: Container(
-                            padding: const EdgeInsets.all(20),
-                            color: Colors.black.withOpacity(0.2),
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 0, right: 00),
-                              child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Explore the brand-new Metaverse universe',
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.oxygen(
-                                        color: const Color(0xffFF40E5),
-                                        fontSize: width * 0.013,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 18,
-                                    ),
-                                    Text(
-                                      'The future of connection will be in 3D & AR VR',
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.montaga(
-                                        color: const Color(0xffF8F8F8),
-                                        fontSize: width * 0.019,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    SizedBox(
-                                      width: width / 2.1,
-                                      child: Text(
-                                        'In virtual worlds that imitate physical settings, users can connect. These areas, which could be anything from magical landscapes to future metropolis, offer a visually stimulating setting for social interactions',
-                                        maxLines: 10,
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.oxygen(
-                                          color: const Color(0xffF8F8F8),
-                                          fontSize: width * 0.016,
-                                        ),
-                                      ),
-                                    ),
-                                  ]),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                SizedBox(
+                  width: width / 1.2,
+                  child: Text(
+                    "Embark on a journey through time with our map of the world's oldest places. Explore ancient civilizations, archaeological wonders, and historic landmarks that have stood the test of time. immerse yourself in the rich tapestry of human history and uncover the secrets of our ancient past",
+                    maxLines: 20,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.oxygen(
+                        color: const Color(0xffFFFFFF),
+                        fontSize: width * 0.024,
+                        fontWeight: FontWeight.w500),
                   ),
                 ),
                 SizedBox(
-                  height: height / 8,
+                  height: height / 40,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: width / 1.1,
+                      decoration: const BoxDecoration(
+                          image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: AssetImage(
+                                  "assets/images/explore_mobile.png"))),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: width * 0.05, vertical: width * 0.042),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              width: width / 1.8,
+                              child: Text(
+                                'Explore the brand-new Metaverse universe',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.montaga(
+                                  color: const Color(0xffFF40E5),
+                                  fontSize: width * 0.043,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: height * 0.01,
+                            ),
+                            SizedBox(
+                              width: width / 1.8,
+                              child: Text(
+                                'The future of connection will be in 3D & AR VR',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.montaga(
+                                  color: const Color(0xffF8F8F8),
+                                  fontSize: width * 0.035,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: height * 0.01,
+                            ),
+                            SizedBox(
+                              width: width / 1.6,
+                              child: Text(
+                                'In virtual worlds that imitate physical settings, users can connect. These areas, which could be anything from magical landscapes to future metropolis, offer a visually stimulating setting for social interactions',
+                                maxLines: 10,
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.oxygen(
+                                  color: const Color(0xffF8F8F8),
+                                  fontSize: width * 0.024,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                // Padding(
+                //   padding: const EdgeInsets.only(left: 20, right: 20),
+                //   child: Container(
+                //     decoration: BoxDecoration(
+                //       color: const Color(0xff1F1F1F),
+                //       image: const DecorationImage(
+                //         image: AssetImage(
+                //           "assets/images/explore_mobile.png",
+                //         ),
+                //         fit: BoxFit.fill,
+                //       ),
+                //       borderRadius: BorderRadius.circular(20),
+                //     ),
+                //     height: height / 4.5,
+                //     width: width / 1.2,
+                //     child: Stack(
+                //       children: [
+                //         Positioned.fill(
+                //           child: Container(
+                //             height: height / 4,
+                //             width: width / 1.2,
+                //             padding: const EdgeInsets.all(10),
+                //             color: Colors.black.withOpacity(0.2),
+                //             child: Column(
+                //                 mainAxisAlignment: MainAxisAlignment.center,
+                //                 crossAxisAlignment: CrossAxisAlignment.center,
+                //                 children: [
+                //                   SizedBox(
+                //                     width: width / 1.8,
+                //                     child: Text(
+                //                       'Explore the brand-new Metaverse universe',
+                //                       textAlign: TextAlign.center,
+                //                       style: GoogleFonts.montaga(
+                //                         color: const Color(0xffFF40E5),
+                //                         fontSize: width * 0.043,
+                //                       ),
+                //                     ),
+                //                   ),
+                //                   SizedBox(
+                //                     height: height / 80,
+                //                   ),
+                //                   SizedBox(
+                //                     width: width / 1.8,
+                //                     child: Text(
+                //                       'The future of connection will be in 3D & AR VR',
+                //                       textAlign: TextAlign.center,
+                //                       style: GoogleFonts.montaga(
+                //                         color: const Color(0xffF8F8F8),
+                //                         fontSize: width * 0.035,
+                //                       ),
+                //                     ),
+                //                   ),
+                //                   SizedBox(
+                //                     height: height / 90,
+                //                   ),
+                //                   SizedBox(
+                //                     width: width / 1.6,
+                //                     child: Text(
+                //                       'In virtual worlds that imitate physical settings, users can connect. These areas, which could be anything from magical landscapes to future metropolis, offer a visually stimulating setting for social interactions',
+                //                       maxLines: 10,
+                //                       textAlign: TextAlign.center,
+                //                       style: GoogleFonts.oxygen(
+                //                         color: const Color(0xffF8F8F8),
+                //                         fontSize: width * 0.024,
+                //                       ),
+                //                     ),
+                //                   ),
+                //                 ]),
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                SizedBox(
+                  height: height / 58,
                 ),
                 bigScreenVideoController.value.isInitialized
                     ? MouseRegion(
@@ -832,7 +1001,7 @@ class _GamingScreenDesktopState extends State<GamingScreenDesktop> {
                         },
                         child: Container(
                           width: width / 1,
-                          height: height / 1,
+                          height: height / 4,
                           decoration: BoxDecoration(
                             border:
                                 Border.all(color: Colors.transparent, width: 3),
@@ -910,9 +1079,16 @@ class _GamingScreenDesktopState extends State<GamingScreenDesktop> {
                       )
                     // ignore: avoid_unnecessary_containers
                     : Container(
-                        child: const Text("ERROR"),
+                        child: const Text(
+                          "ERROR",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
-                const FooterSection()
+                SizedBox(
+                  height: height / 10,
+                ),
+
+                const FooterMobile()
               ],
             ),
           ),
@@ -946,15 +1122,6 @@ class _GamingScreenDesktopState extends State<GamingScreenDesktop> {
       ),
     );
   }
-
-  void _scrollToYellowContainer() {
-    final double offset = scrollControllerBottom.position.maxScrollExtent;
-    scrollControllerBottom.animateTo(
-      offset,
-      duration: const Duration(milliseconds: 1000),
-      curve: Curves.easeOut,
-    );
-  }
 }
 
 class MyClipper extends CustomClipper<Path> {
@@ -963,15 +1130,15 @@ class MyClipper extends CustomClipper<Path> {
     var path = Path();
     path.lineTo(0, size.height);
     path.quadraticBezierTo(
-        size.width / 4, size.height / 1.18, size.width / 2, size.height / 1.18);
+        size.width / 4, size.height / 1.19, size.width / 2, size.height / 1.18);
     path.quadraticBezierTo(
-        3 * size.width / 4, size.height / 1.18, size.width, size.height);
+        3 * size.width / 4, size.height / 1.19, size.width, size.height);
     path.lineTo(size.width, size.height / 4);
 
     path.quadraticBezierTo(
-        3 * size.width / 2, size.height / 2, size.width / 1, size.height / 20);
+        3 * size.width / 2, size.height / 1, size.width / 1, size.height / 20);
     path.quadraticBezierTo(
-        size.width / 2, size.height / 4, size.height, size.height / 10);
+        size.width / 2, size.height / 7, size.height, size.height / 10);
 
     path.close();
     return path;

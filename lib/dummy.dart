@@ -1,76 +1,78 @@
 import 'package:flutter/material.dart';
 
-class MyApp2 extends StatelessWidget {
+class Dummy extends StatefulWidget {
+  const Dummy({super.key});
+
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: MyAppBar(onScrollToBottom: () {
-          // Call the function to scroll to the bottom
-          ScrollableContent.scrollToBottom();
-        }),
-        body: ScrollableContent(),
-      ),
-    );
-  }
+  _DummyState createState() => _DummyState();
 }
-//class
 
-class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final VoidCallback onScrollToBottom;
+class _DummyState extends State<Dummy> {
+  late ScrollController _scrollController;
 
-  const MyAppBar({Key? key, required this.onScrollToBottom}) : super(key: key);
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      title: const Text('Scroll to Bottom Example'),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.arrow_downward),
-          onPressed: onScrollToBottom,
+    return Scaffold(
+      appBar: AppBar(
+        title: GestureDetector(
+          onTap: () {
+            _scrollToYellowContainer();
+            print("object");
+          },
+          child: const Text('Contact'),
         ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-}
-
-class ScrollableContent extends StatelessWidget {
-  static ScrollController _scrollController = ScrollController();
-
-  static void scrollToBottom() {
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeOut,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      controller: _scrollController,
-      child: Column(
-        children: <Widget>[
-          // Your content here
-          Container(
-            height: 2000, // Example content height
-            color: Colors.blueGrey,
-            child: const Center(
-              child: Text('Scrollable Content'),
-            ),
-          ),
-
-          Container(
-            height: 200,
-            color: Colors.red,
-            child: const Text("Bottom"),
-          )
-        ],
       ),
+      body: SingleChildScrollView(
+        controller: _scrollController,
+        child: Column(
+          children: <Widget>[
+            Container(
+              height: 200, // Example height
+              color: Colors.red,
+              child: const Center(child: Text('Section 1')),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Container(
+                height: 200, // Example height
+                color: Colors.blue,
+                child: const Center(child: Text('Section 2')),
+              ),
+            ),
+            Container(
+              height: 200, // Example height
+              color: Colors.green,
+              child: const Center(child: Text('Section 3')),
+            ),
+            Container(
+              height: 200, // Example height
+              color: Colors.yellow,
+              child: const Center(child: Text('Section 4')),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _scrollToYellowContainer() {
+    final double offset = _scrollController.position.maxScrollExtent;
+    _scrollController.animateTo(
+      offset,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
     );
   }
 }

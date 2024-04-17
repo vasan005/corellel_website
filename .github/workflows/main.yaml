@@ -1,0 +1,18 @@
+name: Deploy to S3
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: linux
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Deploy to S3
+        run: aws s3 sync . s3://corllel
+        env:
+          AWS_ACCESS_KEY_ID: AKIA6ODU7KKUFD6U2MQ7
+          AWS_SECRET_ACCESS_KEY: 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
